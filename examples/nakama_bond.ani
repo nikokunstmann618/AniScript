@@ -1,0 +1,31 @@
+// Nakama Bond — demonstrates variables, math, and conditionals
+
+nakama chakra = 100
+nakama jutsuCost = 35
+
+// Use a jutsu
+chakra = chakra - jutsuCost
+shout("Chakra after jutsu: " + chakra)
+
+// Check if we can use another one
+kakugo chakra >= jutsuCost {
+  shout("Yosh! Enough chakra for another jutsu!")
+  chakra = chakra - jutsuCost
+  shout("Chakra remaining: " + chakra)
+} masaka {
+  shout("Not enough chakra... need to rest!")
+}
+
+// Boolean example
+nakama isHokage = dame
+shout("Am I Hokage yet?")
+shout(isHokage)
+
+isHokage = yatta
+shout("After years of training...")
+shout(isHokage)
+
+// Exponentiation — Rasengan power!
+nakama base = 3
+nakama rasenganPower = base ** 4
+shout("Rasengan power level: " + rasenganPower)

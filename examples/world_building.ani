@@ -1,0 +1,157 @@
+// ============================================================
+// World Building — Full OOP Hierarchy Demo
+// AnimeScript v0.2.0
+// ============================================================
+// Hierarchy:
+//   world  Narutoverse          (top tier — the game world)
+//   character  Shinobi          (middle tier — extends world)
+//   character  Hokage from Shinobi  (override train())
+//   move  Rasengan              (leaf tier — attack move)
+//   move  Heal                  (leaf tier — healing move)
+// ============================================================
+
+// ── Tier 1: World ─────────────────────────────────────────
+
+world Narutoverse {
+  awaken(name) {
+    this.name = name
+    this.population = 0
+  }
+
+  addCitizen() {
+    this.population = this.population + 1
+  }
+
+  status() {
+    shout("[ " + this.name + " ] Population: " + this.population)
+  }
+}
+
+// ── Tier 2: Characters ────────────────────────────────────
+
+character Shinobi from Narutoverse {
+  awaken(name, rank) {
+    channel(name)         // calls Narutoverse awaken → sets this.name, this.population
+    this.rank = rank
+    this.hp = 100
+    this.chakra = 80
+  }
+
+  train() {
+    this.chakra = this.chakra + 15
+    shout(this.name + " trains hard! Chakra: " + this.chakra)
+  }
+
+  info() {
+    shout("-- " + this.name + " [" + this.rank + "] HP:" + this.hp + " CK:" + this.chakra)
+  }
+
+  isAlive() {
+    kaeru this.hp > 0
+  }
+}
+
+// Hokage overrides train() — they train twice as hard
+character Hokage from Shinobi {
+  awaken(name) {
+    channel(name, "Kage")
+    this.title = "Hokage"
+  }
+
+  train() {
+    this.chakra = this.chakra + 30   // double the gain
+    shout(this.name + " (Hokage) trains with full power! Chakra: " + this.chakra)
+  }
+
+  proclamation() {
+    shout("I, " + this.name + ", will protect this village with my life! Dattebayo!")
+  }
+}
+
+// ── Tier 3: Moves ─────────────────────────────────────────
+
+move Rasengan {
+  awaken(power) {
+    this.power = power
+    this.name = "Rasengan"
+    this.type = "wind"
+  }
+
+  unleash(attacker, target) {
+    shout(attacker.name + " unleashes " + this.name + "!")
+    target.hp = target.hp - this.power
+    shout(target.name + " takes " + this.power + " damage. HP: " + target.hp)
+  }
+
+  describe() {
+    shout(this.name + " [" + this.type + "] Power: " + this.power)
+  }
+}
+
+move Heal {
+  awaken(amount) {
+    this.amount = amount
+    this.name = "Mystical Palm"
+  }
+
+  unleash(attacker, target) {
+    target.hp = target.hp + this.amount
+    shout(attacker.name + " heals " + target.name + " for " + this.amount + ". HP: " + target.hp)
+  }
+}
+
+// ── Run the world ─────────────────────────────────────────
+
+shout("=== Narutoverse Begins ===")
+
+nakama world1 = summon Narutoverse("Hidden Leaf Village")
+world1.addCitizen()
+world1.addCitizen()
+world1.addCitizen()
+world1.status()
+
+shout("")
+shout("=== Characters Enter ===")
+
+nakama naruto = summon Hokage("Naruto")
+nakama sakura = summon Shinobi("Sakura", "Jonin")
+nakama sasuke = summon Shinobi("Sasuke", "Jonin")
+
+naruto.info()
+sakura.info()
+sasuke.info()
+
+shout("")
+shout("=== Training Arc ===")
+
+naruto.train()
+sakura.train()
+sasuke.train()
+naruto.proclamation()
+
+shout("")
+shout("=== Battle Begins ===")
+
+nakama rasengan = summon Rasengan(45)
+nakama healPalm = summon Heal(30)
+
+rasengan.describe()
+
+// Naruto attacks Sasuke
+rasengan.unleash(naruto, sasuke)
+sasuke.info()
+
+// Sakura heals Sasuke
+healPalm.unleash(sakura, sasuke)
+sasuke.info()
+
+// Check if Sasuke is still standing
+kakugo sasuke.isAlive() {
+  shout("Sasuke is still in the fight!")
+} masaka {
+  shout("Sasuke has been defeated...")
+}
+
+shout("")
+shout("=== End of Episode ===")
+world1.status()

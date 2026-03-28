@@ -1,0 +1,16 @@
+// Fibonacci sequence — The infinite power of numbers!
+// Like an endless battle, the sequence never stops growing.
+
+shout("Fibonacci Sequence (first 10 terms):")
+
+nakama a = 0
+nakama b = 1
+nakama count = 0
+
+tatakai count < 10 {
+  shout(a)
+  nakama next = a + b
+  a = b
+  b = next
+  count = count + 1
+}

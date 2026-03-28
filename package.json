@@ -1,0 +1,19 @@
+{
+  "name": "animescript",
+  "version": "0.1.0",
+  "description": "An anime-themed scripting language where every keyword is a battle cry",
+  "main": "src/animescript.js",
+  "bin": {
+    "ani": "src/animescript.js"
+  },
+  "scripts": {
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": ["anime", "language", "interpreter", "ohm", "scripting"],
+  "author": "nikokunstmann618",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "ohm-js": "^17.1.0"
+  }
+}

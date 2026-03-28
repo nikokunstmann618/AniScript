@@ -1,0 +1,140 @@
+AnimeScript {
+  Program     = Statement*
+
+  Statement   = ShoutStmt
+              | ClassDecl
+              | ThisFieldSetStmt
+              | ObjFieldSetStmt
+              | ExprStmt
+              | ChannelStmt
+              | ReturnStmt
+              | NakamaStmt
+              | AssignStmt
+              | KakugoStmt
+              | TatakaiStmt
+
+  // ── Existing statements ─────────────────────────────────────────────────
+
+  // shout(expr)  — print a value
+  ShoutStmt   = shout "(" Exp ")"
+
+  // nakama x = expr  — declare a variable ("comrade")
+  NakamaStmt  = nakama id "=" Exp
+
+  // x = expr  — reassign an existing variable
+  AssignStmt  = Primary_id "=" Exp
+
+  // kakugo cond { body } masaka { body }  — if / else
+  KakugoStmt  = kakugo Exp "{" Statement* "}" MasakaClause?
+
+  // tatakai cond { body }  — while loop ("battle")
+  TatakaiStmt = tatakai Exp "{" Statement* "}"
+
+  // masaka { body }  — else clause ("no way!")
+  MasakaClause = masaka "{" Statement* "}"
+
+  // ── OOP statements ──────────────────────────────────────────────────────
+
+  // Three-tier class hierarchy — all syntactically identical
+  ClassDecl     = WorldDecl | CharacterDecl | MoveDecl
+
+  WorldDecl     = world     id ("from" id)? "{" ClassMember* "}"
+  CharacterDecl = character id ("from" id)? "{" ClassMember* "}"
+  MoveDecl      = move      id ("from" id)? "{" ClassMember* "}"
+
+  // Methods are the only class members for now
+  ClassMember   = MethodDef
+  MethodDef     = id "(" Params ")" "{" Statement* "}"
+  Params        = ListOf<id, ",">
+  Args          = ListOf<Exp, ",">
+
+  // this.field = val  (inside methods)
+  ThisFieldSetStmt = thisKw "." id "=" Exp
+
+  // obj.field = val  (identifier.field)
+  ObjFieldSetStmt  = id "." id "=" Exp
+
+  // obj.method(args)  — method call as a statement (side effect)
+  // Receiver is restricted to (thisKw | id) so left-recursive Primary
+  // doesn't greedily swallow the whole call before ExprStmt can match it.
+  ExprStmt         = (thisKw | id) "." id "(" Args ")"
+
+  // channel(args)  — call the parent class's awaken constructor
+  ChannelStmt      = channel "(" Args ")"
+
+  // kaeru expr  — return a value from a method
+  ReturnStmt       = kaeru Exp
+
+  // ── Expressions ─────────────────────────────────────────────────────────
+
+  Exp         = Condition relop Condition  -- binary
+              | Condition
+
+  Condition   = Condition addop Term       -- binary
+              | Term
+
+  Term        = Term mulop Factor          -- binary
+              | Factor
+
+  Factor      = Primary "**" Factor        -- exponentiation
+              | "-" Primary                -- negation
+              | Primary
+
+  // Left-recursive member access and method call sit at the top of Primary
+  // so they bind tightest (e.g. summon Foo().bar().baz() works naturally)
+  Primary     = Primary "." id "(" Args ")"  -- methodCall
+              | Primary "." id               -- memberAccess
+              | summon id "(" Args ")"       -- summon
+              | thisKw                       -- thisRef
+              | num
+              | strlit
+              | yatta
+              | dame
+              | id                           -- id
+              | "(" Exp ")"                 -- parens
+
+  // ── Operators ────────────────────────────────────────────────────────────
+
+  relop       = "<=" | ">=" | "==" | "!=" | "<" | ">"
+  addop       = "+" | "-"
+  mulop       = "*" | "/" | "%"
+
+  // ── Literals ─────────────────────────────────────────────────────────────
+
+  num         = digit+ "." digit+          -- float
+              | digit+                     -- int
+
+  strlit      = "\"" strchar* "\""
+  strchar     = "\\" any                   -- escape
+              | ~"\"" any                  -- normal
+
+  // ── Keywords ─────────────────────────────────────────────────────────────
+  // Must not be followed by another alphanumeric character
+
+  nakama      = "nakama"    ~alnum
+  shout       = "shout"     ~alnum
+  kakugo      = "kakugo"    ~alnum
+  masaka      = "masaka"    ~alnum
+  tatakai     = "tatakai"   ~alnum
+  yatta       = "yatta"     ~alnum
+  dame        = "dame"      ~alnum
+
+  // OOP keywords
+  world       = "world"     ~alnum
+  character   = "character" ~alnum
+  move        = "move"      ~alnum
+  summon      = "summon"    ~alnum
+  channel     = "channel"   ~alnum
+  thisKw      = "this"      ~alnum
+  kaeru       = "kaeru"     ~alnum
+
+  keyword     = nakama | shout | kakugo | masaka | tatakai | yatta | dame
+              | world | character | move | summon | channel | thisKw | kaeru
+
+  // Identifiers cannot be keywords
+  id          = ~keyword letter alnum*
+
+  // Whitespace and comments
+  space      += comment
+  comment     = "//" (~"\n" any)*
+}
