@@ -1,4 +1,4 @@
-AnimeScript {
+AniScript {
   Program     = Statement*
 
   Statement   = ShoutStmt
