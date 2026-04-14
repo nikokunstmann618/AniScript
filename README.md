@@ -25,7 +25,7 @@ Files use the `.ani` extension.
 
 ```bash
 npm install
-node src/animescript.js examples/hello.ani
+node src/aniscript.js examples/hello.ani
 ```
 
 Or install globally:
