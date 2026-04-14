@@ -1,8 +1,0 @@
-// Hello World in AnimeScript!
-// Every program starts with a battle cry
-
-nakama greeting = "Konnichiwa, Sekai!"
-shout(greeting)
-
-nakama name = "Naruto"
-shout("Dattebayo, " + name + "!")
