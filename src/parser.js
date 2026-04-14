@@ -2,7 +2,7 @@ import * as ohm from "ohm-js"
 import * as fs from "node:fs/promises"
 
 const grammarSource = await fs.readFile(
-  new URL("./animescript.ohm", import.meta.url),
+  new URL("./aniscript.ohm", import.meta.url),
   "utf-8"
 )
 

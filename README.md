@@ -9,15 +9,15 @@ Files use the `.ani` extension.
 
 ## Keywords
 
-| AnimeScript | Meaning | Replaces |
-|-------------|---------|----------|
-| `nakama`    | "comrade" — declaring a variable is making a new friend | `let` |
-| `shout`     | print to the console (anime characters love yelling) | `print` |
-| `kakugo`    | "readiness/resolve" — prepare for battle | `if` |
-| `masaka`    | "no way!" — the unexpected else branch | `else` |
-| `tatakai`   | "battle" — keep fighting while the condition holds | `while` |
-| `yatta`     | "I did it!" — boolean true | `true` |
-| `dame`      | "no good" — boolean false | `false` |
+| AnimeScript       | Meaning | Replaces |
+|-------------------|---------|----------|
+| `nakama`          | "comrade" — declaring a variable is making a new friend | `let` |
+| `creation`        | print to the console (ref: MHA) | `print` |
+| `judgementChain`  | binding condition (ref: HxH) | `if` |
+| `masaka`          | "no way!" — the unexpected else branch | `else` |
+| `tsukuyomi`       | while the condition holds (ref: Naruto) | `while` |
+| `yatta`           | "I did it!" — boolean true | `true` |
+| `dame`            | "no good" — boolean false | `false` |
 
 ---
 
@@ -53,32 +53,32 @@ Reassign with `=`:
 power = power + 1
 ```
 
-### Print — `shout`
+### Print — `creation`
 
 ```animescript
-shout("Dattebayo!")
-shout(power)
-shout("Level: " + power)
+creation("Dattebayo!")
+creation(power)
+creation("Level: " + power)
 ```
 
 Booleans print as `yatta` / `dame`.
 
-### Conditionals — `kakugo` / `masaka`
+### Conditionals — `judgementChain` / `masaka`
 
 ```animescript
-kakugo power > 9000 {
-  shout("It's over 9000!!!")
+judgementChain power > 9000 {
+  creation("It's over 9000!!!")
 } masaka {
-  shout("Keep training...")
+  creation("Keep training...")
 }
 ```
 
-### While loop — `tatakai`
+### While loop — `tsukuyomi`
 
 ```animescript
 nakama i = 1
-tatakai i <= 10 {
-  shout(i)
+tsukuyomi i <= 10 {
+  creation(i)
   i = i + 1
 }
 ```
@@ -114,7 +114,7 @@ nakama x = 5  // inline comment
 
 ```animescript
 nakama greeting = "Konnichiwa, Sekai!"
-shout(greeting)
+creation(greeting)
 ```
 
 ### Fibonacci
@@ -124,8 +124,8 @@ nakama a = 0
 nakama b = 1
 nakama count = 0
 
-tatakai count < 10 {
-  shout(a)
+tsukuyomi count < 10 {
+  creation(a)
   nakama next = a + b
   a = b
   b = next
@@ -138,10 +138,10 @@ tatakai count < 10 {
 ```animescript
 nakama power = 9001
 
-kakugo power > 9000 {
-  shout("It's over 9000!!!")
+judgementChain power > 9000 {
+  creation("It's over 9000!!!")
 } masaka {
-  shout("Power level is within limits.")
+  creation("Power level is within limits.")
 }
 ```
 

@@ -1,7 +1,7 @@
 AniScript {
   Program     = Statement*
 
-  Statement   = ShoutStmt
+  Statement   = CreationStmt
               | ClassDecl
               | ThisFieldSetStmt
               | ObjFieldSetStmt
@@ -10,13 +10,13 @@ AniScript {
               | ReturnStmt
               | NakamaStmt
               | AssignStmt
-              | KakugoStmt
-              | TatakaiStmt
+              | JudgementChainStmt
+              | TsukuyomiStmt
 
   // ── Existing statements ─────────────────────────────────────────────────
 
-  // shout(expr)  — print a value
-  ShoutStmt   = shout "(" Exp ")"
+  // creation(expr)  — print a value
+  CreationStmt   = creation "(" Exp ")"
 
   // nakama x = expr  — declare a variable ("comrade")
   NakamaStmt  = nakama id "=" Exp
@@ -24,11 +24,11 @@ AniScript {
   // x = expr  — reassign an existing variable
   AssignStmt  = Primary_id "=" Exp
 
-  // kakugo cond { body } masaka { body }  — if / else
-  KakugoStmt  = kakugo Exp "{" Statement* "}" MasakaClause?
+  // judgementChain cond { body } masaka { body }  — if / else
+  JudgementChainStmt  = judgementChain Exp "{" Statement* "}" MasakaClause?
 
-  // tatakai cond { body }  — while loop ("battle")
-  TatakaiStmt = tatakai Exp "{" Statement* "}"
+  // tsukuyomi cond { body }  — while loop ("battle")
+  TsukuyomiStmt = tsukuyomi Exp "{" Statement* "}"
 
   // masaka { body }  — else clause ("no way!")
   MasakaClause = masaka "{" Statement* "}"
@@ -111,13 +111,13 @@ AniScript {
   // ── Keywords ─────────────────────────────────────────────────────────────
   // Must not be followed by another alphanumeric character
 
-  nakama      = "nakama"    ~alnum
-  shout       = "shout"     ~alnum
-  kakugo      = "kakugo"    ~alnum
-  masaka      = "masaka"    ~alnum
-  tatakai     = "tatakai"   ~alnum
-  yatta       = "yatta"     ~alnum
-  dame        = "dame"      ~alnum
+  nakama              = "nakama"    ~alnum
+  creation            = "creation"     ~alnum
+  judgementChain      = "judgementChain"    ~alnum
+  masaka              = "masaka"    ~alnum
+  tsukuyomi           = "tsukuyomi"   ~alnum
+  yatta               = "yatta"     ~alnum
+  dame                = "dame"      ~alnum
 
   // OOP keywords
   world       = "world"     ~alnum
@@ -128,7 +128,7 @@ AniScript {
   thisKw      = "this"      ~alnum
   kaeru       = "kaeru"     ~alnum
 
-  keyword     = nakama | shout | kakugo | masaka | tatakai | yatta | dame
+  keyword     = nakama | creation | judgementChain | masaka | tsukuyomi | yatta | dame
               | world | character | move | summon | channel | thisKw | kaeru
 
   // Identifiers cannot be keywords

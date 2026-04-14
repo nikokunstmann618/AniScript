@@ -153,7 +153,7 @@ export default function interpret(match) {
 
     // ── Existing statements ─────────────────────────────────────────────────
 
-    ShoutStmt(_shout, _open, exp, _close) {
+    CreationStmt(_creation, _open, exp, _close) {
       console.log(formatValue(exp.interpret()))
     },
 
@@ -165,10 +165,10 @@ export default function interpret(match) {
       scope.assign(primary_id.sourceString, exp.interpret())
     },
 
-    KakugoStmt(_kakugo, exp, _open, stmts, _close, elseClause) {
+    JudgementChainStmt(_judgementChain, exp, _open, stmts, _close, elseClause) {
       const condition = exp.interpret()
       if (typeof condition !== "boolean") {
-        animeError(`Kakugo needs a yatta/dame condition, but got '${typeof condition}'`)
+        animeError(`judgementChain needs a yatta/dame condition, but got '${typeof condition}'`)
       }
       if (condition) {
         const outer = scope
@@ -183,9 +183,9 @@ export default function interpret(match) {
       }
     },
 
-    TatakaiStmt(_tatakai, exp, _open, stmts, _close) {
+    TsukuyomiStmt(tsukuyomi, exp, _open, stmts, _close) {
       if (typeof exp.interpret() !== "boolean") {
-        animeError(`Tatakai needs a yatta/dame condition, but got '${typeof exp.interpret()}'`)
+        animeError(`Tsukuyomi needs a yatta/dame condition, but got '${typeof exp.interpret()}'`)
       }
       while (exp.interpret()) {
         const outer = scope

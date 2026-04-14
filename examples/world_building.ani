@@ -23,7 +23,7 @@ world Narutoverse {
   }
 
   status() {
-    shout("[ " + this.name + " ] Population: " + this.population)
+    creation("[ " + this.name + " ] Population: " + this.population)
   }
 }
 
@@ -39,11 +39,11 @@ character Shinobi from Narutoverse {
 
   train() {
     this.chakra = this.chakra + 15
-    shout(this.name + " trains hard! Chakra: " + this.chakra)
+    creation(this.name + " trains hard! Chakra: " + this.chakra)
   }
 
   info() {
-    shout("-- " + this.name + " [" + this.rank + "] HP:" + this.hp + " CK:" + this.chakra)
+    creation("-- " + this.name + " [" + this.rank + "] HP:" + this.hp + " CK:" + this.chakra)
   }
 
   isAlive() {
@@ -60,11 +60,11 @@ character Hokage from Shinobi {
 
   train() {
     this.chakra = this.chakra + 30   // double the gain
-    shout(this.name + " (Hokage) trains with full power! Chakra: " + this.chakra)
+    creation(this.name + " (Hokage) trains with full power! Chakra: " + this.chakra)
   }
 
   proclamation() {
-    shout("I, " + this.name + ", will protect this village with my life! Dattebayo!")
+    creation("I, " + this.name + ", will protect this village with my life! Dattebayo!")
   }
 }
 
@@ -78,13 +78,13 @@ move Rasengan {
   }
 
   unleash(attacker, target) {
-    shout(attacker.name + " unleashes " + this.name + "!")
+    creation(attacker.name + " unleashes " + this.name + "!")
     target.hp = target.hp - this.power
-    shout(target.name + " takes " + this.power + " damage. HP: " + target.hp)
+    creation(target.name + " takes " + this.power + " damage. HP: " + target.hp)
   }
 
   describe() {
-    shout(this.name + " [" + this.type + "] Power: " + this.power)
+    creation(this.name + " [" + this.type + "] Power: " + this.power)
   }
 }
 
@@ -96,13 +96,13 @@ move Heal {
 
   unleash(attacker, target) {
     target.hp = target.hp + this.amount
-    shout(attacker.name + " heals " + target.name + " for " + this.amount + ". HP: " + target.hp)
+    creation(attacker.name + " heals " + target.name + " for " + this.amount + ". HP: " + target.hp)
   }
 }
 
 // ── Run the world ─────────────────────────────────────────
 
-shout("=== Narutoverse Begins ===")
+creation("=== Narutoverse Begins ===")
 
 nakama world1 = summon Narutoverse("Hidden Leaf Village")
 world1.addCitizen()
@@ -110,8 +110,8 @@ world1.addCitizen()
 world1.addCitizen()
 world1.status()
 
-shout("")
-shout("=== Characters Enter ===")
+creation("")
+creation("=== Characters Enter ===")
 
 nakama naruto = summon Hokage("Naruto")
 nakama sakura = summon Shinobi("Sakura", "Jonin")
@@ -121,16 +121,16 @@ naruto.info()
 sakura.info()
 sasuke.info()
 
-shout("")
-shout("=== Training Arc ===")
+creation("")
+creation("=== Training Arc ===")
 
 naruto.train()
 sakura.train()
 sasuke.train()
 naruto.proclamation()
 
-shout("")
-shout("=== Battle Begins ===")
+creation("")
+creation("=== Battle Begins ===")
 
 nakama rasengan = summon Rasengan(45)
 nakama healPalm = summon Heal(30)
@@ -146,12 +146,12 @@ healPalm.unleash(sakura, sasuke)
 sasuke.info()
 
 // Check if Sasuke is still standing
-kakugo sasuke.isAlive() {
-  shout("Sasuke is still in the fight!")
+judgementChain sasuke.isAlive() {
+  creation("Sasuke is still in the fight!")
 } masaka {
-  shout("Sasuke has been defeated...")
+  creation("Sasuke has been defeated...")
 }
 
-shout("")
-shout("=== End of Episode ===")
+creation("")
+creation("=== End of Episode ===")
 world1.status()
