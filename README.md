@@ -13,7 +13,7 @@ Files use the `.ani` extension.
 
 | AnimeScript       | Meaning | Replaces |
 |-------------------|---------|----------|
-| `jutsu`           |  declaring a variable is making a new friend | `let` |
+| `jutsu`           |  declaring a variable like making a new techniques (ref: Naruto) | `let` |
 | `creation`        | print to the console (ref: MHA) | `print` |
 | `judgementChain`  | binding condition (ref: HxH) | `if` |
 | `masaka`          | "no way!" — the unexpected else branch | `else` |
