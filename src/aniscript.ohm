@@ -8,7 +8,7 @@ AniScript {
               | ExprStmt
               | ChannelStmt
               | ReturnStmt
-              | NakamaStmt
+              | JutsuStmt
               | AssignStmt
               | JudgementChainStmt
               | TsukuyomiStmt
@@ -18,8 +18,8 @@ AniScript {
   // creation(expr)  — print a value
   CreationStmt   = creation "(" Exp ")"
 
-  // nakama x = expr  — declare a variable ("comrade")
-  NakamaStmt  = nakama id "=" Exp
+  // jutsu x = expr  — declare a variable ("comrade")
+  JutsuStmt  = jutsu id "=" Exp
 
   // x = expr  — reassign an existing variable
   AssignStmt  = Primary_id "=" Exp
@@ -88,7 +88,7 @@ AniScript {
               | thisKw                       -- thisRef
               | num
               | strlit
-              | yatta
+              | truth
               | dame
               | id                           -- id
               | "(" Exp ")"                 -- parens
@@ -111,12 +111,12 @@ AniScript {
   // ── Keywords ─────────────────────────────────────────────────────────────
   // Must not be followed by another alphanumeric character
 
-  nakama              = "nakama"    ~alnum
+  jutsu              = "jutsu"    ~alnum
   creation            = "creation"     ~alnum
   judgementChain      = "judgementChain"    ~alnum
   masaka              = "masaka"    ~alnum
   tsukuyomi           = "tsukuyomi"   ~alnum
-  yatta               = "yatta"     ~alnum
+  truth               = "truth"     ~alnum
   dame                = "dame"      ~alnum
 
   // OOP keywords
@@ -128,7 +128,7 @@ AniScript {
   thisKw      = "this"      ~alnum
   kaeru       = "kaeru"     ~alnum
 
-  keyword     = nakama | creation | judgementChain | masaka | tsukuyomi | yatta | dame
+  keyword     = jutsu | creation | judgementChain | masaka | tsukuyomi | truth | dame
               | world | character | move | summon | channel | thisKw | kaeru
 
   // Identifiers cannot be keywords

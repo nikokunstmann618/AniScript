@@ -104,7 +104,7 @@ move Heal {
 
 creation("=== Narutoverse Begins ===")
 
-nakama world1 = summon Narutoverse("Hidden Leaf Village")
+jutsu world1 = summon Narutoverse("Hidden Leaf Village")
 world1.addCitizen()
 world1.addCitizen()
 world1.addCitizen()
@@ -113,9 +113,9 @@ world1.status()
 creation("")
 creation("=== Characters Enter ===")
 
-nakama naruto = summon Hokage("Naruto")
-nakama sakura = summon Shinobi("Sakura", "Jonin")
-nakama sasuke = summon Shinobi("Sasuke", "Jonin")
+jutsu naruto = summon Hokage("Naruto")
+jutsu sakura = summon Shinobi("Sakura", "Jonin")
+jutsu sasuke = summon Shinobi("Sasuke", "Jonin")
 
 naruto.info()
 sakura.info()
@@ -132,8 +132,8 @@ naruto.proclamation()
 creation("")
 creation("=== Battle Begins ===")
 
-nakama rasengan = summon Rasengan(45)
-nakama healPalm = summon Heal(30)
+jutsu rasengan = summon Rasengan(45)
+jutsu healPalm = summon Heal(30)
 
 rasengan.describe()
 

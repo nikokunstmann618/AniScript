@@ -6,7 +6,7 @@ function animeError(message) {
 }
 
 function formatValue(value) {
-  if (value === true) return "yatta"
+  if (value === true) return "truth"
   if (value === false) return "dame"
   if (value instanceof AnimeInstance) return `[${value.cls.name}]`
   return String(value)
@@ -22,7 +22,7 @@ class Scope {
 
   declare(name, value) {
     if (this.bindings.has(name)) {
-      animeError(`Nakama '${name}' wa mou iru yo! (variable already declared in this scope)`)
+      animeError(`Jutsu '${name}' wa mou iru yo! (variable already declared in this scope)`)
     }
     this.bindings.set(name, value)
   }
@@ -37,7 +37,7 @@ class Scope {
       return
     }
     animeError(
-      `Nakama '${name}' ga inai yo! Use 'nakama ${name} = ...' first. (undeclared variable)`
+      `Jutsu '${name}' ga inai yo! Use 'jutsu ${name} = ...' first. (undeclared variable)`
     )
   }
 
@@ -45,7 +45,7 @@ class Scope {
     if (this.bindings.has(name)) return this.bindings.get(name)
     if (this.parent) return this.parent.lookup(name)
     animeError(
-      `Nakama '${name}' ga inai yo! Use 'nakama ${name} = ...' first. (undeclared variable)`
+      `Jutsu '${name}' ga inai yo! Use 'jutsu ${name} = ...' first. (undeclared variable)`
     )
   }
 
@@ -157,7 +157,7 @@ export default function interpret(match) {
       console.log(formatValue(exp.interpret()))
     },
 
-    NakamaStmt(_nakama, id, _eq, exp) {
+    JutsuStmt(_jutsu, id, _eq, exp) {
       scope.declare(id.sourceString, exp.interpret())
     },
 
@@ -168,7 +168,7 @@ export default function interpret(match) {
     JudgementChainStmt(_judgementChain, exp, _open, stmts, _close, elseClause) {
       const condition = exp.interpret()
       if (typeof condition !== "boolean") {
-        animeError(`judgementChain needs a yatta/dame condition, but got '${typeof condition}'`)
+        animeError(`judgementChain needs a truth/dame condition, but got '${typeof condition}'`)
       }
       if (condition) {
         const outer = scope
@@ -185,7 +185,7 @@ export default function interpret(match) {
 
     TsukuyomiStmt(tsukuyomi, exp, _open, stmts, _close) {
       if (typeof exp.interpret() !== "boolean") {
-        animeError(`Tsukuyomi needs a yatta/dame condition, but got '${typeof exp.interpret()}'`)
+        animeError(`Tsukuyomi needs a truth/dame condition, but got '${typeof exp.interpret()}'`)
       }
       while (exp.interpret()) {
         const outer = scope
@@ -415,7 +415,7 @@ export default function interpret(match) {
       return char.sourceString
     },
 
-    yatta(_) {
+    truth(_) {
       return true
     },
 

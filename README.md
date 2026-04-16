@@ -13,12 +13,12 @@ Files use the `.ani` extension.
 
 | AnimeScript       | Meaning | Replaces |
 |-------------------|---------|----------|
-| `nakama`          | "comrade" — declaring a variable is making a new friend | `let` |
+| `jutsu`           |  declaring a variable is making a new friend | `let` |
 | `creation`        | print to the console (ref: MHA) | `print` |
 | `judgementChain`  | binding condition (ref: HxH) | `if` |
 | `masaka`          | "no way!" — the unexpected else branch | `else` |
 | `tsukuyomi`       | while the condition holds (ref: Naruto) | `while` |
-| `yatta`           | "I did it!" — boolean true | `true` |
+| `truth`           | boolean true (ref: FMA) | `true` |
 | `dame`            | "no good" — boolean false | `false` |
 
 ---
@@ -41,12 +41,12 @@ ani examples/power_level.ani
 
 ## Syntax
 
-### Variables — `nakama`
+### Variables — `jutsu`
 
 ```animescript
-nakama power = 9001
-nakama name = "Naruto"
-nakama isHokage = dame
+jutsu power = 9001
+jutsu name = "Naruto"
+jutsu isHokage = dame
 ```
 
 Reassign with `=`:
@@ -63,7 +63,7 @@ creation(power)
 creation("Level: " + power)
 ```
 
-Booleans print as `yatta` / `dame`.
+Booleans print as `truth` / `dame`.
 
 ### Conditionals — `judgementChain` / `masaka`
 
@@ -78,7 +78,7 @@ judgementChain power > 9000 {
 ### While loop — `tsukuyomi`
 
 ```animescript
-nakama i = 1
+jutsu i = 1
 tsukuyomi i <= 10 {
   creation(i)
   i = i + 1
@@ -98,14 +98,14 @@ tsukuyomi i <= 10 {
 Double-quoted strings. Supports `\\`, `\"`, `\n`, `\t`.
 
 ```animescript
-nakama greeting = "Konnichiwa, " + name + "!"
+jutsu greeting = "Konnichiwa, " + name + "!"
 ```
 
 ### Comments
 
 ```animescript
 // This is a comment
-nakama x = 5  // inline comment
+jutsu x = 5  // inline comment
 ```
 
 ---
@@ -115,20 +115,20 @@ nakama x = 5  // inline comment
 ### Hello World
 
 ```animescript
-nakama greeting = "Konnichiwa, Sekai!"
+jutsu greeting = "Konnichiwa, Sekai!"
 creation(greeting)
 ```
 
 ### Fibonacci
 
 ```animescript
-nakama a = 0
-nakama b = 1
-nakama count = 0
+jutsu a = 0
+jutsu b = 1
+jutsu count = 0
 
 tsukuyomi count < 10 {
   creation(a)
-  nakama next = a + b
+  jutsu next = a + b
   a = b
   b = next
   count = count + 1
@@ -138,7 +138,7 @@ tsukuyomi count < 10 {
 ### Power Level Check
 
 ```animescript
-nakama power = 9001
+jutsu power = 9001
 
 judgementChain power > 9000 {
   creation("It's over 9000!!!")
@@ -169,7 +169,7 @@ animescript/
 ├── examples/
 │   ├── hello.ani
 │   ├── power_level.ani
-│   ├── nakama_bond.ani
+│   ├── jutsu_bond.ani
 │   └── fibonacci.ani
 └── test/
     └── animescript.test.js
