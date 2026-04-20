@@ -165,10 +165,10 @@ export default function interpret(match) {
       scope.assign(primary_id.sourceString, exp.interpret())
     },
 
-    JudgementChainStmt(_judgementChain, exp, _open, stmts, _close, elseClause) {
+   GeassStmt(_geass, exp, _open, stmts, _close, elseClause) {
       const condition = exp.interpret()
       if (typeof condition !== "boolean") {
-        animeError(`judgementChain needs a truth/dame condition, but got '${typeof condition}'`)
+        animeError(`geass needs a truth/dame condition, but got '${typeof condition}'`)
       }
       if (condition) {
         const outer = scope

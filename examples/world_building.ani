@@ -146,7 +146,7 @@ healPalm.unleash(sakura, sasuke)
 sasuke.info()
 
 // Check if Sasuke is still standing
-judgementChain sasuke.isAlive() {
+geass sasuke.isAlive() {
   creation("Sasuke is still in the fight!")
 } masaka {
   creation("Sasuke has been defeated...")

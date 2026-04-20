@@ -10,7 +10,7 @@ AniScript {
               | ReturnStmt
               | JutsuStmt
               | AssignStmt
-              | JudgementChainStmt
+              | GeassStmt
               | TsukuyomiStmt
 
   // ── Existing statements ─────────────────────────────────────────────────
@@ -24,8 +24,8 @@ AniScript {
   // x = expr  — reassign an existing variable
   AssignStmt  = Primary_id "=" Exp
 
-  // judgementChain cond { body } masaka { body }  — if / else
-  JudgementChainStmt  = judgementChain Exp "{" Statement* "}" MasakaClause?
+  // geass cond { body } masaka { body }  — if / else
+  GeassStmt  = geass Exp "{" Statement* "}" MasakaClause?
 
   // tsukuyomi cond { body }  — while loop ("battle")
   TsukuyomiStmt = tsukuyomi Exp "{" Statement* "}"
@@ -111,9 +111,9 @@ AniScript {
   // ── Keywords ─────────────────────────────────────────────────────────────
   // Must not be followed by another alphanumeric character
 
-  jutsu              = "jutsu"    ~alnum
+  jutsu               = "jutsu"    ~alnum
   creation            = "creation"     ~alnum
-  judgementChain      = "judgementChain"    ~alnum
+  geass               = "geass"    ~alnum
   masaka              = "masaka"    ~alnum
   tsukuyomi           = "tsukuyomi"   ~alnum
   truth               = "truth"     ~alnum
@@ -128,7 +128,7 @@ AniScript {
   thisKw      = "this"      ~alnum
   kaeru       = "kaeru"     ~alnum
 
-  keyword     = jutsu | creation | judgementChain | masaka | tsukuyomi | truth | dame
+  keyword     = jutsu | creation | geass | masaka | tsukuyomi | truth | dame
               | world | character | move | summon | channel | thisKw | kaeru
 
   // Identifiers cannot be keywords
