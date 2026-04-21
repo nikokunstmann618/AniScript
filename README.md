@@ -1,17 +1,17 @@
 <img width="300" height="300" alt="ani_logo" src="https://github.com/user-attachments/assets/6f331cc7-e7d0-4c63-9082-f149a75d5684" />
 
-# AnimeScript 🗡️
+# AniScript 🗡️
 
 > *"A programming language where every line of code is a battle cry."*
 
-AnimeScript is a simple, anime-themed scripting language. It takes inspiration from [BabyJS](https://github.com/rtoal/babyjs) and replaces every keyword with a reference from your favorite shows.  
+AniScript is a simple, anime-themed scripting language. It takes inspiration from [BabyJS](https://github.com/rtoal/babyjs) and replaces every keyword with a reference from your favorite shows.  
 Files use the `.ani` extension.
 
 ---
 
 ## Keywords
 
-| AnimeScript       | Meaning | Replaces |
+| AniScript       | Meaning | Replaces |
 |-------------------|---------|----------|
 | `jutsu`           |  declaring a variable like making a new techniques (ref: Naruto) | `let` |
 | `creation`        | print to the console (ref: MHA) | `print` |
@@ -43,7 +43,7 @@ ani examples/power_level.ani
 
 ### Variables — `jutsu`
 
-```animescript
+```aniscript
 jutsu power = 9001
 jutsu name = "Naruto"
 jutsu isHokage = dame
@@ -51,13 +51,13 @@ jutsu isHokage = dame
 
 Reassign with `=`:
 
-```animescript
+```aniscript
 power = power + 1
 ```
 
 ### Print — `creation`
 
-```animescript
+```aniscript
 creation("Dattebayo!")
 creation(power)
 creation("Level: " + power)
@@ -67,7 +67,7 @@ Booleans print as `truth` / `dame`.
 
 ### Conditionals — `geass` / `masaka`
 
-```animescript
+```aniscript
 geass power > 9000 {
   creation("It's over 9000!!!")
 } masaka {
@@ -77,7 +77,7 @@ geass power > 9000 {
 
 ### While loop — `tsukuyomi`
 
-```animescript
+```aniscript
 jutsu i = 1
 tsukuyomi i <= 10 {
   creation(i)
@@ -97,13 +97,13 @@ tsukuyomi i <= 10 {
 
 Double-quoted strings. Supports `\\`, `\"`, `\n`, `\t`.
 
-```animescript
+```aniscript
 jutsu greeting = "Konnichiwa, " + name + "!"
 ```
 
 ### Comments
 
-```animescript
+```aniscript
 // This is a comment
 jutsu x = 5  // inline comment
 ```
@@ -114,14 +114,14 @@ jutsu x = 5  // inline comment
 
 ### Hello World
 
-```animescript
+```aniscript
 jutsu greeting = "Konnichiwa, Sekai!"
 creation(greeting)
 ```
 
 ### Fibonacci
 
-```animescript
+```aniscript
 jutsu a = 0
 jutsu b = 1
 jutsu count = 0
@@ -137,7 +137,7 @@ tsukuyomi count < 10 {
 
 ### Power Level Check
 
-```animescript
+```aniscript
 jutsu power = 9001
 
 geass power > 9000 {
@@ -160,19 +160,19 @@ npm test
 ## Project Structure
 
 ```
-animescript/
+aniscript/
 ├── src/
-│   ├── animescript.ohm   ← Ohm grammar
+│   ├── aniscript.ohm     ← Ohm grammar
 │   ├── parser.js         ← Parses source into a match tree
 │   ├── interpreter.js    ← Tree-walk interpreter
-│   └── animescript.js    ← CLI entry point
+│   └── aniscript.js      ← CLI entry point
 ├── examples/
 │   ├── hello.ani
 │   ├── power_level.ani
 │   ├── jutsu_bond.ani
 │   └── fibonacci.ani
 └── test/
-    └── animescript.test.js
+    └── aniscript.test.js
 ```
 
 ---

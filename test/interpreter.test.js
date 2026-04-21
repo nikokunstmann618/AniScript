@@ -460,3 +460,148 @@ creation(h)
 `)
   assert.equal(logs[0], "[Hero]")
 })
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 11. COVERAGE — branches not yet exercised
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Covers _registerClass with no parent (parentIds.children.length === 0 branch)
+// Previously all class tests used inheritance; this pins the parentless path.
+test("coverage: class with no parent registers correctly", () => {
+  const logs = runCapture(`
+world Solo {
+  awaken() { this.x = 7 }
+  val() { kaeru this.x }
+}
+jutsu s = summon Solo()
+creation(s.val())
+`)
+  assert.equal(logs[0], "7")
+})
+
+// Covers Primary_thisRef returning `this` from a method (the failing test fixed)
+test("coverage: this can be returned directly from a method", () => {
+  const logs = runCapture(`
+world Leaf {
+  awaken() { this.x = 42 }
+  getSelf() { kaeru this }
+}
+jutsu w = summon Leaf()
+jutsu self = w.getSelf()
+creation(self.x)
+`)
+  assert.equal(logs[0], "42")
+})
+
+// Covers the Condition_binary subtraction branch (only + was tested before)
+test("coverage: Condition_binary subtraction branch", () => {
+  const [result] = runCapture("creation(10 - 3)")
+  assert.equal(result, "7")
+})
+
+// Covers TsukuyomiStmt's initial boolean check on a non-boolean (redundant throw path)
+// This specifically exercises the first exp.interpret() call before the while loop
+test("coverage: tsukuyomi initial check throws on non-boolean", () => {
+  const match = parse('jutsu s = "nope"\ntsukuyomi s { s = s }')
+  assert.throws(() => interpret(match), /NANI/)
+})
+
+// Covers ExprStmt where receiver is `this` (method call statement on this inside a method)
+test("coverage: method call statement using this as receiver inside a method", () => {
+  const logs = runCapture(`
+world Chain {
+  awaken() { this.x = 0 }
+  inc() { this.x = this.x + 1 }
+  run() { this.inc() }
+}
+jutsu c = summon Chain()
+c.run()
+creation(c.x)
+`)
+  assert.equal(logs[0], "1")
+})
+
+// Covers kaeru with explicit null-like return from a void method used in expression
+test("coverage: method with no kaeru returns null when used in expression", () => {
+  const logs = runCapture(`
+world Void {
+  awaken() { this.v = 0 }
+  noop() { this.v = 1 }
+}
+jutsu o = summon Void()
+jutsu r = o.noop()
+creation(r)
+`)
+  assert.equal(logs[0], "null")
+})
+
+// Covers formatValue for null explicitly
+test("coverage: formatValue handles null (from void method result)", () => {
+  const logs = runCapture(`
+world Nully {
+  awaken() { this.x = 0 }
+  nothing() { this.x = 0 }
+}
+jutsu n = summon Nully()
+jutsu res = n.nothing()
+creation(res)
+`)
+  assert.equal(logs[0], "null")
+})
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 12. COVERAGE — hit the remaining two branch gaps (lines 242-243, 358-359)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Covers the `?? null` branch in callMethod (argValues[i] ?? null)
+// — call a method with fewer arguments than declared parameters
+test("coverage: calling method with fewer args than params fills missing with null", () => {
+  const logs = []
+  const orig = console.log
+  console.log = v => logs.push(v)
+  run(`
+world Box {
+  awaken() { this.v = 0 }
+  set(a, b) { this.v = a this.missing = b }
+}
+jutsu b = summon Box()
+b.set(99, 42)
+creation(b.v)
+b.set(10)
+creation(b.missing)
+`)
+  console.log = orig
+  assert.equal(logs[0], "99")
+  assert.equal(logs[1], "null")
+})
+
+// Covers the `?? char.sourceString` fallback in strchar_escape
+// — already tested as "unrecognized escape sequence" in interpreter.test.js,
+// but if c8 still shows it uncovered, add a direct targeted version:
+test("coverage: strchar_escape fallback for unrecognized escape char", () => {
+  const [result] = runCapture('creation("\\q")')
+  assert.equal(result, "q")
+})
+
+// Covers the parentName ternary null branch in _registerClass
+// — a world/character/move declared WITHOUT `from` sets parentName = null
+// The ternary `parentIds.children.length > 0 ? ... : null` null-branch
+test("coverage: _registerClass sets parentName null when no from clause", () => {
+  const logs = runCapture(`
+world Standalone {
+  awaken() { this.v = 99 }
+}
+jutsu s = summon Standalone()
+creation(s.v)
+`)
+  assert.equal(logs[0], "99")
+})
+
+test("throws when calling non-existent method on instance in expression position", () => {
+  const match = parse(`
+world Leaf { awaken() { this.x = 1 } }
+jutsu w = summon Leaf()
+jutsu v = w.vanish()
+`)
+  assert.throws(() => interpret(match), /NANI/)
+})

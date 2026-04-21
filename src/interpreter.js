@@ -49,9 +49,7 @@ class Scope {
     )
   }
 
-  has(name) {
-    return this.bindings.has(name) || (this.parent ? this.parent.has(name) : false)
-  }
+  
 }
 
 // ── OOP data structures ────────────────────────────────────────────────────
@@ -236,13 +234,11 @@ export default function interpret(match) {
     // ── OOP statements ──────────────────────────────────────────────────────
 
     // this.field = val
-    ThisFieldSetStmt(_this, _dot, fieldId, _eq, exp) {
-      const instance = scope.lookup("this")
-      if (!(instance instanceof AnimeInstance)) {
-        animeError("'this' is not an instance — are you outside a method?")
-      }
-      instance.setField(fieldId.sourceString, exp.interpret())
-    },
+
+  ThisFieldSetStmt(_this, _dot, fieldId, _eq, exp) {
+  const instance = scope.lookup("this")
+  instance.setField(fieldId.sourceString, exp.interpret())
+},
 
     // obj.field = val
     ObjFieldSetStmt(objId, _dot, fieldId, _eq, exp) {

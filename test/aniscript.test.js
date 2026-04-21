@@ -3,6 +3,18 @@ import assert from "node:assert/strict"
 import parse from "../src/parser.js"
 import interpret from "../src/interpreter.js"
 
+function runCapture(source) {
+  const logs = []
+  const orig = console.log
+  console.log = v => logs.push(v)
+  try {
+    interpret(parse(source))
+  } finally {
+    console.log = orig
+  }
+  return logs
+}
+
 // Helper: parse and interpret a snippet, capturing stdout
 function run(source) {
   const match = parse(source)
@@ -366,3 +378,21 @@ creation(self.x)
 `)
   assert.equal(logs[0], "42")
 })
+
+test("coverage: missing arg fills as null", () => {
+  const logs = []
+  const orig = console.log
+  console.log = v => logs.push(v)
+  run(`
+world Box {
+  awaken() { this.v = 0 }
+  set(a, b) { this.v = a this.missing = b }
+}
+jutsu b = summon Box()
+b.set(99)
+creation(b.missing)
+`)
+  console.log = orig
+  assert.equal(logs[0], "null")
+})
+
