@@ -1,15 +1,25 @@
 {
-  "name": "animescript",
+  "name": "aniscript",
   "version": "0.1.0",
   "description": "An anime-themed scripting language where every keyword is a battle cry",
-  "main": "src/animescript.js",
+  "main": "src/aniscript.js",
   "bin": {
-    "ani": "src/animescript.js"
+    "ani": "src/aniscript.js"
   },
   "scripts": {
-    "test": "node --test test/**/*.test.js"
+    "test": "c8 node --test test/**/*.test.js",
+    "coverage": "c8 node --test test/**/*.test.js"
   },
-  "keywords": ["anime", "language", "interpreter", "ohm", "scripting"],
+  "devDependencies": {
+    "c8": "^10.1.3"
+  },
+  "keywords": [
+    "anime",
+    "language",
+    "interpreter",
+    "ohm",
+    "scripting"
+  ],
   "author": "nikokunstmann618",
   "license": "MIT",
   "type": "module",
