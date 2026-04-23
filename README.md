@@ -19,7 +19,7 @@ Files use the `.ani` extension.
 | `counter`         | the opposing else branch | `else` |
 | `tsukuyomi`       | while the condition holds (ref: Naruto) | `while` |
 | `truth`           | boolean true (ref: FMA) | `true` |
-| `illusion`        | boolean false — a false reality | `false` |
+| `illusion`        | boolean false | `false` |
 
 ---
 
