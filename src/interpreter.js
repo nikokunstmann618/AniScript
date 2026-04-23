@@ -126,18 +126,24 @@ export default function interpret(match) {
     method.paramNames.forEach((name, i) => {
       scope.declare(name, argValues[i] ?? null)
     })
+    let result
     try {
       for (const s of method.bodyNode.children) {
         s.interpret()
       }
-      return null
+      result = null
     } catch (e) {
-      if (e instanceof ReturnSignal) return e.value
-      throw e
-    } finally {
-      scope = outerScope
-      currentClass = outerClass
+      if (e instanceof ReturnSignal) {
+        result = e.value
+      } else {
+        scope = outerScope
+        currentClass = outerClass
+        throw e
+      }
     }
+    scope = outerScope
+    currentClass = outerClass
+    return result
   }
 
   const actions = {
