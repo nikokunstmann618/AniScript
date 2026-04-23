@@ -1,7 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import parse from "../src/parser.js"
-
 const syntaxChecks = [
   ["hello world", 'creation("Hello, world!")'],
   ["declare object", "world Narutoverse { awaken(name) { this.name = name } }"],
@@ -26,9 +25,8 @@ const syntaxChecks = [
   ["move instances",
     "jutsu rasengan = summon Rasengan(45) jutsu healPalm = summon Heal(30)"],
   ["geass conditional",
-    'geass sasuke.isAlive() { creation("Sasuke is still in the fight!") } masaka { creation("Sasuke has been defeated...") }'],
+    'geass sasuke.isAlive() { creation("Sasuke is still in the fight!") } counter { creation("Sasuke has been defeated...") }'],
 ]
-
 for (const [label, src] of syntaxChecks) {
   test(`parses: ${label}`, () => {
     assert.doesNotThrow(() => parse(src))

@@ -39,9 +39,9 @@ test("parses a geass statement", () => {
   assert.doesNotThrow(() => parse("jutsu x = 5\ngeass x > 3 { creation(x) }"))
 })
 
-test("parses a geass/masaka statement", () => {
+test("parses a geass/counter statement", () => {
   assert.doesNotThrow(() =>
-    parse("jutsu x = 1\ngeass x == 1 { creation(x) } masaka { creation(x) }")
+    parse("jutsu x = 1\ngeass x == 1 { creation(x) } counter { creation(x) }")
   )
 })
 
@@ -63,8 +63,8 @@ test("parses string escape sequences", () => {
   assert.doesNotThrow(() => parse('creation("Line 1\\nLine 2")'))
 })
 
-test("parses truth and dame", () => {
-  assert.doesNotThrow(() => parse("jutsu win = truth\njutsu lose = dame"))
+test("parses truth and illusion", () => {
+  assert.doesNotThrow(() => parse("jutsu win = truth\njutsu lose = illusion"))
 })
 
 test("parses all relational operators", () => {
@@ -137,9 +137,9 @@ test("geass true branch", () => {
   assert.doesNotThrow(() => run('jutsu x = 10\ngeass x > 5 { creation("big") }'))
 })
 
-test("geass masaka branch", () => {
+test("geass counter branch", () => {
   assert.doesNotThrow(() =>
-    run('jutsu x = 1\ngeass x > 5 { creation("big") } masaka { creation("small") }')
+    run('jutsu x = 1\ngeass x > 5 { creation("big") } counter { creation("small") }')
   )
 })
 
@@ -158,13 +158,13 @@ test("creation prints truth for true", () => {
   assert.equal(logs[0], "truth")
 })
 
-test("creation prints dame for false", () => {
+test("creation prints illusion for false", () => {
   const logs = []
   const orig = console.log
   console.log = v => logs.push(v)
-  run("creation(dame)")
+  run("creation(illusion)")
   console.log = orig
-  assert.equal(logs[0], "dame")
+  assert.equal(logs[0], "illusion")
 })
 
 test("comments are ignored", () => {
@@ -395,4 +395,3 @@ creation(b.missing)
   console.log = orig
   assert.equal(logs[0], "null")
 })
-
