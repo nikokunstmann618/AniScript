@@ -46,12 +46,19 @@ const tests = [
   ["folds /", ...fold("/", 5, 8, 0.625)],
   ["folds %", ...fold("%", 10, 3, 1)],
   ["folds **", ...fold("**", 5, 8, 390625)],
-  ["folds <", ...cmp("<", 5, 8, true)],
-  ["folds <=", ...cmp("<=", 5, 8, true)],
-  ["folds ==", ...cmp("==", 5, 8, false)],
-  ["folds !=", ...cmp("!=", 5, 8, true)],
-  ["folds >=", ...cmp(">=", 5, 8, false)],
-  ["folds >", ...cmp(">", 5, 8, false)],
+  // both ternary branches for each comparison operator
+  ["folds < true",  ...cmp("<",  5, 8, true)],
+  ["folds < false", ...cmp("<",  8, 5, false)],
+  ["folds <= true",  ...cmp("<=", 5, 8, true)],
+  ["folds <= false", ...cmp("<=", 8, 5, false)],
+  ["folds == false", ...cmp("==", 5, 8, false)],
+  ["folds == true",  ...cmp("==", 5, 5, true)],
+  ["folds != true",  ...cmp("!=", 5, 8, true)],
+  ["folds != false", ...cmp("!=", 5, 5, false)],
+  ["folds >= false", ...cmp(">=", 5, 8, false)],
+  ["folds >= true",  ...cmp(">=", 8, 5, true)],
+  ["folds > false", ...cmp(">", 5, 8, false)],
+  ["folds > true",  ...cmp(">", 8, 5, true)],
 
   // Strength reductions
   ["optimizes +0", binary("+", x, num(0)), x],
@@ -69,12 +76,30 @@ const tests = [
 
   // Unary negation folding
   ["folds negation", unary("-", num(8)), num(-8)],
+  [
+    "keeps unary - on non-literal operand",
+    unary("-", x),
+    unary("-", x),
+  ],
 
-  // Boolean shortcuts
-  ["removes left false from ||", binary("||", illusion(), binary("<", x, num(1))), binary("<", x, num(1))],
+  // Geass: non-constant test keeps statement (consequent / alternate still optimized)
+  [
+    "geass with dynamic test",
+    geass(
+      x,
+      [creation(binary("+", num(1), num(2)))],
+      [creation(num(1))]
+    ),
+    geass(x, [creation(num(3))], [creation(num(1))]),
+  ],
+
+  // Boolean shortcuts — all six short-circuit rules
+  ["removes left false from &&",  binary("&&", illusion(), binary("<", x, num(1))), illusion()],
+  ["removes left true from &&",   binary("&&", truth(),    binary("<", x, num(1))), binary("<", x, num(1))],
+  ["removes right true from &&",  binary("&&", binary("<", x, num(1)), truth()),    binary("<", x, num(1))],
+  ["removes left true from ||",   binary("||", truth(),    binary("<", x, num(1))), truth()],
+  ["removes left false from ||",  binary("||", illusion(), binary("<", x, num(1))), binary("<", x, num(1))],
   ["removes right false from ||", binary("||", binary("<", x, num(1)), illusion()), binary("<", x, num(1))],
-  ["removes left true from &&", binary("&&", truth(), binary("<", x, num(1))), binary("<", x, num(1))],
-  ["removes right true from &&", binary("&&", binary("<", x, num(1)), truth()), binary("<", x, num(1))],
 
   // Self-assignment removal
   ["removes x=x", assign(x, x), []],
@@ -138,6 +163,20 @@ const tests = [
 
   // Parentheses elimination
   ["removes parentheses", core.parenthesizedExpression(binary("+", num(1), num(2))), num(3)],
+
+  // Unknown node kind falls through unchanged (covers the ?? node fallback in optimize())
+  // CounterClause has no optimizer entry, so it also exercises core.counterClause
+  ["unknown kind passes through", core.counterClause([]), core.counterClause([])],
+
+  // String literal passes through (covers core.stringLiteral and optimizer.StringLiteral)
+  ["string literal passes through", str("hello"), str("hello")],
+
+  // Geass with null alternate: ?? [] branch fires, then dynamic test returns node
+  [
+    "geass null alternate becomes empty array",
+    core.geassStatement(x, [creation(num(1))], null),
+    geass(x, [creation(num(1))], []),
+  ],
 
   // Complex program
   [

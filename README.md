@@ -155,6 +155,14 @@ geass power > 9000 {
 npm test
 ```
 
+With a coverage report (c8):
+
+```bash
+npm run coverage
+```
+
+Do not run `npm test coverage` — npm will pass the word `coverage` as an extra test entry point and Node will try to load a file called `coverage`, which fails. Use `npm run coverage` instead.
+
 ---
 
 ## Project Structure

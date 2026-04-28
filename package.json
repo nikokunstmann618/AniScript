@@ -7,8 +7,8 @@
     "ani": "src/aniscript.js"
   },
   "scripts": {
-    "test": "c8 node --test test/**/*.test.js",
-    "coverage": "c8 node --test test/**/*.test.js"
+    "test": "node --test test/**/*.test.js",
+    "coverage": "c8 --reporter=text node --test test/**/*.test.js"
   },
   "devDependencies": {
     "c8": "^10.1.3"
