@@ -53,6 +53,10 @@ export default function analyze(match) {
     const parentName =
       parentIds.children.length > 0 ? parentIds.children[0].sourceString : null
 
+    if (declaredClasses.has(name)) {
+        error(`Class '${name}' already declared`)
+      }
+    
     if (parentName && !declaredClasses.has(parentName)) {
       error(
         `Class '${name}' tries to extend '${parentName}', but that class doesn't exist yet`
@@ -124,9 +128,52 @@ export default function analyze(match) {
 
     // ── Class declarations ────────────────────────────────────────────────
 
-    WorldDecl(_kw, nameId, _fromKw, parentIds, _lbrace, members, _rbrace) {
-      return analyzeClass(nameId, parentIds, members, core.worldDeclaration)
+    AwakenDef(_kw, _lp, params, _rp, _lbrace, fieldSetStmts, _rbrace) {
+      const paramNames = params.asIteration().children.map(p => p.sourceString);
+      const outerInMethod = inMethod;
+      inMethod = true;
+      pushScope();
+      declare("this");
+      for (const p of paramNames) declare(p);
+      const body = fieldSetStmts.children.map(s => s.analyze());
+      popScope();
+      inMethod = outerInMethod;
+      return { kind: "AwakenDef", paramNames, body };
     },
+    
+    WorldDecl(_kw, nameId, _fromKw, parentIds, _lbrace, awakenDef, methodMembers, _rbrace) {
+      const name = nameId.sourceString;
+      const parentName = parentIds.children.length > 0 ? parentIds.children[0].sourceString : null;
+    
+      // Check parent existence and duplicate declaration
+      if (parentName && !declaredClasses.has(parentName)) {
+        error(`Class '${name}' tries to extend '${parentName}', but that class doesn't exist yet`);
+      }
+      
+    
+      // Register the class BEFORE analyzing its body
+      declaredClasses.set(name, { parentName });
+    
+      // Set context for analysis of the body
+      const outerClass = currentClassName;
+      const outerParent = currentParentName;
+      currentClassName = name;
+      currentParentName = parentName;
+    
+      // Analyze awaken and methods
+      const awaken = awakenDef.analyze();
+      const methodNodes = methodMembers.children.map(m => m.analyze());
+      const awakenMethod = core.methodDefinition("awaken", awaken.paramNames, awaken.body);
+      const allMethods = [awakenMethod, ...methodNodes];
+    
+      // Restore context
+      currentClassName = outerClass;
+      currentParentName = outerParent;
+    
+      return core.worldDeclaration(name, parentName, allMethods);
+    },
+
+    
 
     CharacterDecl(_kw, nameId, _fromKw, parentIds, _lbrace, members, _rbrace) {
       return analyzeClass(nameId, parentIds, members, core.characterDeclaration)
@@ -260,17 +307,50 @@ export default function analyze(match) {
       return core.numericLiteral(Number(this.sourceString))
     },
 
-    strlit(_open, chars, _close) {
-      return core.stringLiteral(chars.children.map(c => c.analyze()).join(""))
+    str(_) {
+      const full = this.sourceString;            // e.g., "\"Hello\\nworld\""
+      const content = full.slice(1, -1);         // remove quotes
+      const startPos = this.source.getLineAndColumnMessage();
+      let result = "";
+      for (let i = 0; i < content.length; i++) {
+        const ch = content[i];
+        if (ch === "\\" && i + 1 < content.length) {
+          const next = content[i + 1];
+          // 1. Complex escapes (e.g., \u1234)
+          if (next === "u") {
+            // parse Unicode escape (requires 4 hex digits)
+            const hex = content.slice(i + 2, i + 6);
+            if (/^[0-9a-fA-F]{4}$/.test(hex)) {
+              result += String.fromCodePoint(parseInt(hex, 16));
+              i += 5; // skip \u1234
+              continue;
+            } else {
+              // issue a warning
+              console.warn(`Invalid Unicode escape at ${startPos}`);
+              result += "\\u" + hex;
+              i += 5;
+              continue;
+            }
+          }
+          // 2. Standard escapes
+          const escapes = { n: "\n", t: "\t", r: "\r", "\\": "\\", '"': '"' };
+          result += escapes[next] ?? next;
+          i++;
+        } else {
+          result += ch;
+        }
+      }
+      return core.stringLiteral(result);
     },
 
-    strchar_escape(_backslash, char) {
-      return ESCAPES[char.sourceString] ?? char.sourceString
-    },
-
-    strchar_normal(char) {
-      return char.sourceString
-    },
+    // COVER BY str(_)
+    // strchar_escape(_backslash, char) {
+      
+    // },
+    
+    // strchar_normal(char) {
+      
+    // },
 
     truth(_) {
       return core.truthLiteral()
