@@ -38,12 +38,13 @@ AniScript {
   // Three-tier class hierarchy — all syntactically identical
   ClassDecl     = WorldDecl | CharacterDecl | MoveDecl
 
-  WorldDecl     = world     id ("from" id)? "{" ClassMember* "}"
+  WorldDecl     = world     id ("from" id)? "{" AwakenDef ClassMember* "}"
   CharacterDecl = character id ("from" id)? "{" ClassMember* "}"
   MoveDecl      = move      id ("from" id)? "{" ClassMember* "}"
 
   // Methods are the only class members for now
   ClassMember   = MethodDef
+  AwakenDef    = awaken "(" Params ")" "{" ThisFieldSetStmt* "}"
   MethodDef     = id "(" Params ")" "{" Statement* "}"
   Params        = ListOf<id, ",">
   Args          = ListOf<Exp, ",">
@@ -87,7 +88,7 @@ AniScript {
               | summon id "(" Args ")"       -- summon
               | thisKw                       -- thisRef
               | num
-              | strlit
+              | str
               | truth
               | dame
               | id                           -- id
@@ -103,10 +104,9 @@ AniScript {
 
   num         = digit+ "." digit+          -- float
               | digit+                     -- int
-
-  strlit      = "\"" strchar* "\""
-  strchar     = "\\" any                   -- escape
-              | ~"\"" any                  -- normal
+  str         = "\"" strchar*  "\""        -- str
+  strchar     = "\\" any                    -- escape
+              | ~("\\" | "\"") any          -- normal
 
   // ── Keywords ─────────────────────────────────────────────────────────────
   // Must not be followed by another alphanumeric character
@@ -121,6 +121,7 @@ AniScript {
 
   // OOP keywords
   world       = "world"     ~alnum
+  awaken      = "awaken"    ~alnum
   character   = "character" ~alnum
   move        = "move"      ~alnum
   summon      = "summon"    ~alnum
@@ -128,8 +129,10 @@ AniScript {
   thisKw      = "this"      ~alnum
   kaeru       = "kaeru"     ~alnum
 
+  idchar      = letter | digit | "_"
+
   keyword     = jutsu | creation | geass | masaka | tsukuyomi | truth | dame
-              | world | character | move | summon | channel | thisKw | kaeru
+              | world | awaken | character | move | summon | channel | thisKw | kaeru
 
   // Identifiers cannot be keywords
   id          = ~keyword letter alnum*
