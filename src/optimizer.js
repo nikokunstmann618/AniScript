@@ -3,21 +3,18 @@
 import * as core from "./core.js"
 
 export default function optimize(node) {
-    console.log("OPTIMIZE called with kind:", node?.kind, node);
-    return optimizers?.[node.kind]?.(node) ?? node;
-  }
+  return optimizers?.[node.kind]?.(node) ?? node
+}
 
 // Helper to check if a node is a literal number or boolean
 const isLiteralNumber = (n) => n?.kind === "NumericLiteral"
-const isLiteralBool = (n) => n?.kind === "TruthLiteral" || n?.kind === "IllusionLiteral"
 const getLiteralValue = (n) => {
   if (n?.kind === "NumericLiteral") return n.value
   if (n?.kind === "TruthLiteral") return true
   if (n?.kind === "IllusionLiteral") return false
   return undefined
 }
-const isZero = (n) => isLiteralNumber(n) && n.value === 0
-const isOne = (n) => isLiteralNumber(n) && n.value === 1
+
 
 const optimizers = {
   Program(p) {
@@ -152,13 +149,15 @@ const optimizers = {
       if (rv === 0 && e.op === "**") return core.numericLiteral(1)
     }
 
-    // Boolean shortcuts
+    // Boolean shortcuts (short-circuit style simplification)
     if (e.op === "&&") {
       if (leftVal === false) return e.left
+      if (leftVal === true) return e.right
       if (rightVal === true) return e.left
     }
     if (e.op === "||") {
       if (leftVal === true) return e.left
+      if (leftVal === false) return e.right
       if (rightVal === false) return e.left
     }
 
