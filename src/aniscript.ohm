@@ -24,14 +24,14 @@ AniScript {
   // x = expr  — reassign an existing variable
   AssignStmt  = Primary_id "=" Exp
 
-  // geass cond { body } masaka { body }  — if / else
-  GeassStmt  = geass Exp "{" Statement* "}" MasakaClause?
+  // geass cond { body } counter { body }  — if / else
+  GeassStmt  = geass Exp "{" Statement* "}" CounterClause?
 
   // tsukuyomi cond { body }  — while loop ("battle")
   TsukuyomiStmt = tsukuyomi Exp "{" Statement* "}"
 
-  // masaka { body }  — else clause ("no way!")
-  MasakaClause = masaka "{" Statement* "}"
+  // counter { body }  — else clause
+  CounterClause = counter "{" Statement* "}"
 
   // ── OOP statements ──────────────────────────────────────────────────────
 
@@ -90,7 +90,7 @@ AniScript {
               | num
               | str
               | truth
-              | dame
+              | illusion
               | id                           -- id
               | "(" Exp ")"                 -- parens
 
@@ -111,13 +111,13 @@ AniScript {
   // ── Keywords ─────────────────────────────────────────────────────────────
   // Must not be followed by another alphanumeric character
 
-  jutsu               = "jutsu"    ~alnum
-  creation            = "creation"     ~alnum
-  geass               = "geass"    ~alnum
-  masaka              = "masaka"    ~alnum
-  tsukuyomi           = "tsukuyomi"   ~alnum
-  truth               = "truth"     ~alnum
-  dame                = "dame"      ~alnum
+  jutsu               = "jutsu"      ~alnum
+  creation            = "creation"   ~alnum
+  geass               = "geass"      ~alnum
+  counter             = "counter"    ~alnum
+  tsukuyomi           = "tsukuyomi"  ~alnum
+  truth               = "truth"      ~alnum
+  illusion            = "illusion"   ~alnum
 
   // OOP keywords
   world       = "world"     ~alnum
@@ -131,8 +131,8 @@ AniScript {
 
   idchar      = letter | digit | "_"
 
-  keyword     = jutsu | creation | geass | masaka | tsukuyomi | truth | dame
-              | world | awaken | character | move | summon | channel | thisKw | kaeru
+  keyword     = jutsu | creation | geass | counter | tsukuyomi | truth | illusion
+              | world | character | move | summon | channel | thisKw | kaeru
 
   // Identifiers cannot be keywords
   id          = ~keyword letter alnum*

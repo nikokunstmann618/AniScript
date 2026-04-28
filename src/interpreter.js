@@ -7,7 +7,7 @@ function animeError(message) {
 
 function formatValue(value) {
   if (value === true) return "truth"
-  if (value === false) return "dame"
+  if (value === false) return "illusion"
   if (value instanceof AnimeInstance) return `[${value.cls.name}]`
   return String(value)
 }
@@ -126,18 +126,24 @@ export default function interpret(match) {
     method.paramNames.forEach((name, i) => {
       scope.declare(name, argValues[i] ?? null)
     })
+    let result
     try {
       for (const s of method.bodyNode.children) {
         s.interpret()
       }
-      return null
+      result = null
     } catch (e) {
-      if (e instanceof ReturnSignal) return e.value
-      throw e
-    } finally {
-      scope = outerScope
-      currentClass = outerClass
+      if (e instanceof ReturnSignal) {
+        result = e.value
+      } else {
+        scope = outerScope
+        currentClass = outerClass
+        throw e
+      }
     }
+    scope = outerScope
+    currentClass = outerClass
+    return result
   }
 
   const actions = {
@@ -166,7 +172,7 @@ export default function interpret(match) {
    GeassStmt(_geass, exp, _open, stmts, _close, elseClause) {
       const condition = exp.interpret()
       if (typeof condition !== "boolean") {
-        animeError(`geass needs a truth/dame condition, but got '${typeof condition}'`)
+        animeError(`geass needs a truth/illusion condition, but got '${typeof condition}'`)
       }
       if (condition) {
         const outer = scope
@@ -183,7 +189,7 @@ export default function interpret(match) {
 
     TsukuyomiStmt(tsukuyomi, exp, _open, stmts, _close) {
       if (typeof exp.interpret() !== "boolean") {
-        animeError(`Tsukuyomi needs a truth/dame condition, but got '${typeof exp.interpret()}'`)
+        animeError(`Tsukuyomi needs a truth/illusion condition, but got '${typeof exp.interpret()}'`)
       }
       while (exp.interpret()) {
         const outer = scope
@@ -196,7 +202,7 @@ export default function interpret(match) {
       }
     },
 
-    MasakaClause(_masaka, _open, stmts, _close) {
+    CounterClause(_counter, _open, stmts, _close) {
       const outer = scope
       scope = new Scope(outer)
       try {
@@ -234,11 +240,10 @@ export default function interpret(match) {
     // ── OOP statements ──────────────────────────────────────────────────────
 
     // this.field = val
-
-  ThisFieldSetStmt(_this, _dot, fieldId, _eq, exp) {
-  const instance = scope.lookup("this")
-  instance.setField(fieldId.sourceString, exp.interpret())
-},
+    ThisFieldSetStmt(_this, _dot, fieldId, _eq, exp) {
+      const instance = scope.lookup("this")
+      instance.setField(fieldId.sourceString, exp.interpret())
+    },
 
     // obj.field = val
     ObjFieldSetStmt(objId, _dot, fieldId, _eq, exp) {
@@ -415,7 +420,7 @@ export default function interpret(match) {
       return true
     },
 
-    dame(_) {
+    illusion(_) {
       return false
     },
   }

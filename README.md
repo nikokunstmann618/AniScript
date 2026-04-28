@@ -13,13 +13,13 @@ Files use the `.ani` extension.
 
 | AniScript       | Meaning | Replaces |
 |-------------------|---------|----------|
-| `jutsu`           |  declaring a variable like making a new techniques (ref: Naruto) | `let` |
+| `jutsu`           |  declaring a variable like making a new technique (ref: Naruto) | `let` |
 | `creation`        | print to the console (ref: MHA) | `print` |
 | `geass`           | binding condition (ref: CodeGeass) | `if` |
-| `masaka`          | "no way!" — the unexpected else branch | `else` |
+| `counter`         | the opposing else branch | `else` |
 | `tsukuyomi`       | while the condition holds (ref: Naruto) | `while` |
 | `truth`           | boolean true (ref: FMA) | `true` |
-| `dame`            | "no good" — boolean false | `false` |
+| `illusion`        | boolean false | `false` |
 
 ---
 
@@ -46,7 +46,7 @@ ani examples/power_level.ani
 ```aniscript
 jutsu power = 9001
 jutsu name = "Naruto"
-jutsu isHokage = dame
+jutsu isHokage = illusion
 ```
 
 Reassign with `=`:
@@ -63,14 +63,14 @@ creation(power)
 creation("Level: " + power)
 ```
 
-Booleans print as `truth` / `dame`.
+Booleans print as `truth` / `illusion`.
 
-### Conditionals — `geass` / `masaka`
+### Conditionals — `geass` / `counter`
 
 ```aniscript
 geass power > 9000 {
   creation("It's over 9000!!!")
-} masaka {
+} counter {
   creation("Keep training...")
 }
 ```
@@ -142,7 +142,7 @@ jutsu power = 9001
 
 geass power > 9000 {
   creation("It's over 9000!!!")
-} masaka {
+} counter {
   creation("Power level is within limits.")
 }
 ```
@@ -167,10 +167,19 @@ aniscript/
 │   ├── interpreter.js    ← Tree-walk interpreter
 │   └── aniscript.js      ← CLI entry point
 ├── examples/
-│   ├── hello.ani
-│   ├── power_level.ani
-│   ├── jutsu_bond.ani
-│   └── fibonacci.ani
+│   ├── hello.ani          … minimal print
+│   ├── intro.ani          … strings + loop
+│   ├── loops.ani          … counted loop
+│   ├── ifs.ani            … nested conditions
+│   ├── functions.ani      … method composition
+│   ├── gcd.ani            … recursive method
+│   ├── points.ani         … small “struct” via move
+│   ├── scope.ani          … blocks and names
+│   ├── any.ani            … one identity over values
+│   ├── optionals.ani      … defaults + small box
+│   ├── thirteen.ani       … numeric literals
+│   ├── world_building.ani … OOP tiers
+│   └── hunterx2.ani       … longer sample
 └── test/
     └── aniscript.test.js
 ```

@@ -148,7 +148,7 @@ sasuke.info()
 // Check if Sasuke is still standing
 geass sasuke.isAlive() {
   creation("Sasuke is still in the fight!")
-} masaka {
+} counter {
   creation("Sasuke has been defeated...")
 }
 

@@ -1,0 +1,7 @@
+// Counted loop: print "Hi" ten times
+
+jutsu count = 5 * 2
+tsukuyomi count > 0 {
+  creation("Hi")
+  count = count - 1
+}

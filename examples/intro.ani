@@ -1,0 +1,10 @@
+// Name string and a counting loop
+
+jutsu languageName = "AniScript"
+creation("👋👋👋")
+
+jutsu i = 1
+tsukuyomi i <= 5 {
+  creation("Welcome, " + languageName + " — line " + i)
+  i = i + 1
+}

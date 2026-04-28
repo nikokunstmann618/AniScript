@@ -1,0 +1,20 @@
+// Three 2D points, each a summoned move
+
+move Point {
+  awaken(x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  show() {
+    creation("Point " + this.x + ", " + this.y)
+  }
+}
+
+jutsu p0 = summon Point(1, 2)
+jutsu p1 = summon Point(3, 5)
+jutsu p2 = summon Point(-3, 8)
+
+p0.show()
+p1.show()
+p2.show()

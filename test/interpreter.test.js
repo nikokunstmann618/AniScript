@@ -23,14 +23,15 @@ function run(source) {
   interpret(parse(source))
 }
 
-// Keyword reference (updated):
-//   nakama  → jutsu
-//   shout   → creation
-//   kakugo  → geass
-//   tatakai → tsukuyomi
-//   yatta   → truth
-//   dame    → dame       (unchanged)
-//   OOP keywords unchanged: world, character, move, summon, channel, this, kaeru, masaka
+// Keyword reference:
+//   jutsu     → declare a variable
+//   creation  → print a value
+//   geass     → if statement
+//   counter   → else clause
+//   tsukuyomi → while loop
+//   truth     → true
+//   illusion  → false
+//   OOP keywords: world, character, move, summon, channel, this, kaeru
 
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -105,9 +106,9 @@ test("comparison: < returns truth when true", () => {
   assert.equal(result, "truth")
 })
 
-test("comparison: < returns dame when false", () => {
+test("comparison: < returns illusion when false", () => {
   const [result] = runCapture("creation(5 < 3)")
-  assert.equal(result, "dame")
+  assert.equal(result, "illusion")
 })
 
 test("comparison: > returns truth when true", () => {
@@ -130,9 +131,9 @@ test("comparison: == returns truth for equal numbers", () => {
   assert.equal(result, "truth")
 })
 
-test("comparison: == returns dame for different values", () => {
+test("comparison: == returns illusion for different values", () => {
   const [result] = runCapture("creation(7 == 8)")
-  assert.equal(result, "dame")
+  assert.equal(result, "illusion")
 })
 
 test("comparison: != returns truth for different values", () => {
@@ -145,9 +146,9 @@ test("comparison: == works for string equality", () => {
   assert.equal(result, "truth")
 })
 
-test("comparison: == returns dame for different strings", () => {
+test("comparison: == returns illusion for different strings", () => {
   const [result] = runCapture('creation("abc" == "xyz")')
-  assert.equal(result, "dame")
+  assert.equal(result, "illusion")
 })
 
 test("comparison: boolean equality — truth == truth", () => {
@@ -155,9 +156,9 @@ test("comparison: boolean equality — truth == truth", () => {
   assert.equal(result, "truth")
 })
 
-test("comparison: boolean equality — truth == dame", () => {
-  const [result] = runCapture("creation(truth == dame)")
-  assert.equal(result, "dame")
+test("comparison: boolean equality — truth == illusion", () => {
+  const [result] = runCapture("creation(truth == illusion)")
+  assert.equal(result, "illusion")
 })
 
 
@@ -200,9 +201,9 @@ test("string + truth coerces boolean to 'truth'", () => {
   assert.equal(result, "result: truth")
 })
 
-test("string + dame coerces boolean to 'dame'", () => {
-  const [result] = runCapture('creation("result: " + dame)')
-  assert.equal(result, "result: dame")
+test("string + illusion coerces boolean to 'illusion'", () => {
+  const [result] = runCapture('creation("result: " + illusion)')
+  assert.equal(result, "result: illusion")
 })
 
 test("string: carriage return escape sequence is interpreted", () => {
@@ -291,21 +292,21 @@ test("tsukuyomi: accumulates a sum correctly", () => {
 // 6. GEASS (if/else) — branch correctness
 // ═══════════════════════════════════════════════════════════════════════════
 
-test("geass: true branch runs, masaka branch does not", () => {
+test("geass: true branch runs, counter branch does not", () => {
   const logs = runCapture(
-    'jutsu x = 10\ngeass x > 5 { creation("big") } masaka { creation("small") }'
+    'jutsu x = 10\ngeass x > 5 { creation("big") } counter { creation("small") }'
   )
   assert.deepEqual(logs, ["big"])
 })
 
-test("geass: masaka branch runs when condition is false", () => {
+test("geass: counter branch runs when condition is false", () => {
   const logs = runCapture(
-    'jutsu x = 1\ngeass x > 5 { creation("big") } masaka { creation("small") }'
+    'jutsu x = 1\ngeass x > 5 { creation("big") } counter { creation("small") }'
   )
   assert.deepEqual(logs, ["small"])
 })
 
-test("geass: no masaka, false condition — nothing runs", () => {
+test("geass: no counter, false condition — nothing runs", () => {
   const logs = runCapture('jutsu x = 1\ngeass x > 5 { creation("big") }')
   assert.equal(logs.length, 0)
 })
@@ -466,7 +467,6 @@ creation(h)
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Covers _registerClass with no parent (parentIds.children.length === 0 branch)
-// Previously all class tests used inheritance; this pins the parentless path.
 test("coverage: class with no parent registers correctly", () => {
   const logs = runCapture(`
 world Solo {
@@ -479,7 +479,7 @@ creation(s.val())
   assert.equal(logs[0], "7")
 })
 
-// Covers Primary_thisRef returning `this` from a method (the failing test fixed)
+// Covers Primary_thisRef returning `this` from a method
 test("coverage: this can be returned directly from a method", () => {
   const logs = runCapture(`
 world Leaf {
@@ -493,20 +493,19 @@ creation(self.x)
   assert.equal(logs[0], "42")
 })
 
-// Covers the Condition_binary subtraction branch (only + was tested before)
+// Covers the Condition_binary subtraction branch
 test("coverage: Condition_binary subtraction branch", () => {
   const [result] = runCapture("creation(10 - 3)")
   assert.equal(result, "7")
 })
 
-// Covers TsukuyomiStmt's initial boolean check on a non-boolean (redundant throw path)
-// This specifically exercises the first exp.interpret() call before the while loop
+// Covers TsukuyomiStmt's initial boolean check on a non-boolean
 test("coverage: tsukuyomi initial check throws on non-boolean", () => {
   const match = parse('jutsu s = "nope"\ntsukuyomi s { s = s }')
   assert.throws(() => interpret(match), /NANI/)
 })
 
-// Covers ExprStmt where receiver is `this` (method call statement on this inside a method)
+// Covers ExprStmt where receiver is `this`
 test("coverage: method call statement using this as receiver inside a method", () => {
   const logs = runCapture(`
 world Chain {
@@ -550,11 +549,10 @@ creation(res)
 })
 
 // ═══════════════════════════════════════════════════════════════════════════
-// 12. COVERAGE — hit the remaining two branch gaps (lines 242-243, 358-359)
+// 12. COVERAGE — hit the remaining two branch gaps
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Covers the `?? null` branch in callMethod (argValues[i] ?? null)
-// — call a method with fewer arguments than declared parameters
 test("coverage: calling method with fewer args than params fills missing with null", () => {
   const logs = []
   const orig = console.log
@@ -576,16 +574,12 @@ creation(b.missing)
 })
 
 // Covers the `?? char.sourceString` fallback in strchar_escape
-// — already tested as "unrecognized escape sequence" in interpreter.test.js,
-// but if c8 still shows it uncovered, add a direct targeted version:
 test("coverage: strchar_escape fallback for unrecognized escape char", () => {
   const [result] = runCapture('creation("\\q")')
   assert.equal(result, "q")
 })
 
 // Covers the parentName ternary null branch in _registerClass
-// — a world/character/move declared WITHOUT `from` sets parentName = null
-// The ternary `parentIds.children.length > 0 ? ... : null` null-branch
 test("coverage: _registerClass sets parentName null when no from clause", () => {
   const logs = runCapture(`
 world Standalone {
