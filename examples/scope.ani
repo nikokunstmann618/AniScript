@@ -1,0 +1,11 @@
+// Outer name, a branch-local name, and string concatenation
+
+jutsu a = 1024
+creation(a + a)
+
+geass truth {
+  jutsu b = 9
+} counter { }
+
+jutsu b2 = "hi" + "ho"
+creation(b2)

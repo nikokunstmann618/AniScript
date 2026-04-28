@@ -167,10 +167,19 @@ aniscript/
 │   ├── interpreter.js    ← Tree-walk interpreter
 │   └── aniscript.js      ← CLI entry point
 ├── examples/
-│   ├── hello.ani
-│   ├── power_level.ani
-│   ├── jutsu_bond.ani
-│   └── fibonacci.ani
+│   ├── hello.ani          … minimal print
+│   ├── intro.ani          … strings + loop
+│   ├── loops.ani          … counted loop
+│   ├── ifs.ani            … nested conditions
+│   ├── functions.ani      … method composition
+│   ├── gcd.ani            … recursive method
+│   ├── points.ani         … small “struct” via move
+│   ├── scope.ani          … blocks and names
+│   ├── any.ani            … one identity over values
+│   ├── optionals.ani      … defaults + small box
+│   ├── thirteen.ani       … numeric literals
+│   ├── world_building.ani … OOP tiers
+│   └── hunterx2.ani       … longer sample
 └── test/
     └── aniscript.test.js
 ```

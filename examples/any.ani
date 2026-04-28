@@ -1,0 +1,11 @@
+// One method passes different value kinds through
+
+move Identity {
+  awaken() {}
+  of(x) { kaeru x }
+}
+
+jutsu idn = summon Identity()
+creation(idn.of(3))
+creation(idn.of("hello"))
+creation(idn.of(truth))

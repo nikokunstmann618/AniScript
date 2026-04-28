@@ -1,0 +1,12 @@
+// Chained helpers on a move: g(f(3)) → 12
+
+move PairFns {
+  awaken() {}
+
+  f(a) { kaeru a + 3 }
+  g(a) { kaeru a * 2 }
+}
+
+jutsu t = summon PairFns()
+// g(f(3))  →  (3 + 3) * 2  =  12
+creation(t.g(t.f(3)))

@@ -1,0 +1,15 @@
+// if / else if / else: nested geass (no "else if" keyword)
+
+jutsu x = 3
+
+geass x < 0 {
+  creation(x)
+} counter {
+  geass x > 5 {
+    creation("Oh no")
+  } counter {
+    creation("ok")
+  }
+}
+
+jutsu y = 3

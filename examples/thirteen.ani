@@ -1,0 +1,9 @@
+// Floats and a very large integer literal
+
+jutsu x = 13.0
+creation(x + 0.0)
+
+// Note: the host uses JavaScript numbers (IEEE double); huge integers lose precision
+
+jutsu y = 131313131313131313131313131313131313
+creation(y)
