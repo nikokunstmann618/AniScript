@@ -132,7 +132,7 @@ AniScript {
   idchar      = letter | digit | "_"
 
   keyword     = jutsu | creation | geass | counter | tsukuyomi | truth | illusion
-              | world | character | move | summon | channel | thisKw | kaeru
+              | world | awaken | character | move | summon | channel | thisKw | kaeru
 
   // Identifiers cannot be keywords
   id          = ~keyword letter alnum*

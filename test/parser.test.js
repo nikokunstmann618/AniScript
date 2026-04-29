@@ -188,6 +188,7 @@ const syntaxErrors = [
     "world X { awaken(health) { health = 1 } }",
     /Line 1, col 28:/,
   ],
+  ["awaken used as variable name", "jutsu awaken = 5", /Line 1, col 7:/],
 ];
 
 describe("The parser", () => {
