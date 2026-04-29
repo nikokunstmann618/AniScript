@@ -130,6 +130,12 @@ const tests = [
   ["geass with true and alternate", geass(truth(), [creation(num(42))], [creation(num(99))]), [creation(num(42))]],
   ["geass with false and alternate", geass(illusion(), [creation(num(42))], [creation(num(99))]), [creation(num(99))]],
 
+  [
+  "geass with false and CounterClause alternate",
+  geass(illusion(), [creation(num(1))], core.counterClause([creation(num(99))])),
+  [creation(num(99))],
+],
+
   // Tsukuyomi with constant false
   ["tsukuyomi false", tsukuyomi(illusion(), [creation(num(1))]), []],
 

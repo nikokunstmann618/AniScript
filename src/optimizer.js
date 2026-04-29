@@ -34,20 +34,25 @@ const optimizers = {
   },
 
   AssignStatement(s) {
-    s.target = optimize(s.target)
-    s.source = optimize(s.source)
-    // x = x becomes no-op
-    if (s.target === s.source) return []
-    return s
-  },
+  s.source = optimize(s.source)
+  const targetName = typeof s.target === "string" ? s.target : s.target.name
+  const sourceName = s.source?.kind === "Identifier" ? s.source.name : null
+  if (targetName && targetName === sourceName) return []
+  return s
+},
 
   GeassStatement(s) {
     s.test = optimize(s.test)
     s.consequent = s.consequent.flatMap(optimize)
-    s.alternate = s.alternate?.flatMap?.(optimize) ?? []
+    if (s.alternate?.kind === "CounterClause") {
+      s.alternate.body = s.alternate.body.flatMap(optimize)
+    } else {
+      s.alternate = s.alternate?.flatMap?.(optimize) ?? []
+    }
     const testVal = getLiteralValue(s.test)
     if (testVal !== undefined) {
-      return testVal ? s.consequent : s.alternate
+      if (testVal) return s.consequent
+      return s.alternate?.kind === "CounterClause" ? s.alternate.body : s.alternate
     }
     return s
   },
