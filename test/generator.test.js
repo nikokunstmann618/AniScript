@@ -160,15 +160,16 @@ describe("The generator", () => {
   assert.equal(generate(node), "hero.attack(10)")
 })
 
+
   it("generates a channel statement with no args", () => {
-    const node = core.channelStatement([])
-    assert.equal(generate(node), "super()")
-  })
+  const node = core.channelStatement([])
+  assert.equal(generate(node), "super.awaken()")
+})
 
   it("generates a channel statement with args", () => {
-    const node = core.channelStatement([num(1), str("hi")])
-    assert.equal(generate(node), 'super(1, "hi")')
-  })
+  const node = core.channelStatement([num(1), str("hi")])
+  assert.equal(generate(node), 'super.awaken(1, "hi")')
+})
 
   // ── Control flow ─────────────────────────────────────────────────────────
 

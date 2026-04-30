@@ -1,6 +1,6 @@
 // ============================================================
-// World Building — Full OOP Hierarchy Demo
-// AnimeScript v0.2.0 
+// World Building — Full OOP Hierarchy Demo with channel
+// AnimeScript v0.2.0
 // ============================================================
 
 world Narutoverse {
@@ -20,8 +20,7 @@ world Narutoverse {
 
 world Shinobi from Narutoverse {
   awaken(name, rank) {
-    this.name = name
-    this.population = 0
+    channel(name)               // calls Narutoverse.awaken(name)
     this.rank = rank
     this.hp = 100
     this.chakra = 80
@@ -43,11 +42,7 @@ world Shinobi from Narutoverse {
 
 world Hokage from Shinobi {
   awaken(name) {
-    this.name = name
-    this.population = 0
-    this.rank = "Kage"
-    this.hp = 100
-    this.chakra = 80
+    channel(name, "Kage")       // calls Shinobi.awaken(name, "Kage")
     this.title = "Hokage"
   }
 
@@ -61,7 +56,6 @@ world Hokage from Shinobi {
   }
 }
 
-// Moves also need constructors, so they become world
 world Rasengan {
   awaken(power) {
     this.power = power

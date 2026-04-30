@@ -101,7 +101,7 @@ const generators = {
 
   ChannelStatement(s) {
     const args = s.args.map(generate).join(", ")
-    return `super(${args})`
+    return `super.awaken(${args})`;
   },
 
   ReturnStatement(s) {

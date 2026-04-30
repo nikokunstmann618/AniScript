@@ -112,7 +112,7 @@ describe("The compiler", () => {
         init() { channel(100) }
       }
     `)
-    assert.ok(js.includes("super(100)"))
+    assert.ok(js.includes("super.awaken(100)"))
   })
 
   it("compiles summon as new", () => {

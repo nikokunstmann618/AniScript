@@ -44,7 +44,7 @@ AniScript {
 
   // Methods are the only class members for now
   ClassMember   = MethodDef
-  AwakenDef    = awaken "(" Params ")" "{" ThisFieldSetStmt* "}"
+  AwakenDef = awaken "(" Params ")" "{" (ThisFieldSetStmt | ChannelStmt)* "}"
   MethodDef     = id "(" Params ")" "{" Statement* "}"
   Params        = ListOf<id, ",">
   Args          = ListOf<Exp, ",">
