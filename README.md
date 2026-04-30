@@ -1,6 +1,6 @@
 <img width="300" height="300" alt="ani_logo" src="https://github.com/user-attachments/assets/6f331cc7-e7d0-4c63-9082-f149a75d5684" />
 
-# [[AniScript]](https://nikokunstmann618.github.io/AniScript/) 🗡️
+# [[AniScript]](https://nikokunstmann618.github.io/AniScript/) 
 
 > *"A programming language where every line of code is a battle cry."*
 
