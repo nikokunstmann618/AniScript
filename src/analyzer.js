@@ -326,7 +326,6 @@ export default function analyze(match) {
               continue;
             } else {
               // issue a warning
-              console.warn(`Invalid Unicode escape at ${startPos}`);
               result += "\\u" + hex;
               i += 5;
               continue;
