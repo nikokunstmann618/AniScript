@@ -243,6 +243,17 @@ describe("The generator", () => {
     assert.ok(js.includes("class Cat extends Animal"))
   })
 
+  it("generates a character class with parent and no awaken", () => {
+    const node = core.characterDeclaration("Child", "Parent", [
+      core.methodDefinition("foo", [], [core.creationStatement(core.stringLiteral("hi"))])
+    ])
+    const js = generate(node)
+    assert.match(js, /class Child extends Parent \{/)
+    assert.match(js, /constructor\(\.\.\.args\)/)
+    assert.match(js, /foo\(\) \{/)
+    assert.match(js, /console\.log\("hi"\)/)
+  })
+
   it("generates a character class", () => {
     const method = core.methodDefinition("init", [], [])
     const node = core.characterDeclaration("Ninja", null, [method])

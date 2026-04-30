@@ -12,9 +12,23 @@ function indent(code) {
 }
 
 function generateClass(d) {
-  const ext = d.parentName ? ` extends ${d.parentName}` : ""
-  const methods = d.methods.map(generate).join("\n\n")
-  return `class ${d.name}${ext} {\n${indent(methods)}\n}`
+  const ext = d.parentName ? ` extends ${d.parentName}` : "";
+  const awakenMethod = d.methods.find(m => m.name === "awaken");
+  let constructorCode = "";
+  if (awakenMethod) {
+    const params = awakenMethod.paramNames.join(", ");
+    if (d.parentName) {
+      // Call super first, then this.awaken
+      constructorCode = `constructor(${params}) {\n  super(${params});\n  this.awaken(${params});\n}\n\n`;
+    } else {
+      constructorCode = `constructor(${params}) {\n  this.awaken(${params});\n}\n\n`;
+    }
+  } else if (d.parentName) {
+    constructorCode = `constructor(...args) {\n  super(...args);\n}\n\n`;
+  }
+  // Keep all methods, including awaken
+  const methods = d.methods.map(generate).join("\n\n");
+  return `class ${d.name}${ext} {\n${indent(constructorCode + methods)}\n}`;
 }
 
 const generators = {
@@ -113,7 +127,7 @@ const generators = {
 
   SummonExpression(e) {
     const args = e.args.map(generate).join(", ")
-    return `new ${e.className}(${args})`
+    return `new ${e.className}(${args})`;
   },
 
   ThisExpression() {

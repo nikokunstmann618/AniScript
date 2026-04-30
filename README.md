@@ -62,8 +62,15 @@ creation("Dattebayo!")
 creation(power)
 creation("Level: " + power)
 ```
-
+### Boolean (true/false) -  `truth` / `illusion`
 Booleans print as `truth` / `illusion`.
+
+```aniscript
+jutsu a = truth
+jutsu b = illusion
+creation(a)   
+creation(b)   
+```
 
 ### Conditionals — `geass` / `counter`
 
@@ -115,36 +122,53 @@ jutsu x = 5  // inline comment
 ### Hello World
 
 ```aniscript
-jutsu greeting = "Konnichiwa, Sekai!"
-creation(greeting)
+creation("Hello, world")
 ```
 
-### Fibonacci
+### GCD
 
 ```aniscript
-jutsu a = 0
-jutsu b = 1
-jutsu count = 0
+world MathGcd {
+  awaken() {}
 
-tsukuyomi count < 10 {
-  creation(a)
-  jutsu next = a + b
-  a = b
-  b = next
-  count = count + 1
+  run(x, y) { kaeru this.gcd(x, y) }
+
+  gcd(x, y) {
+    geass y == 0 {
+      kaeru x
+    } counter {
+      kaeru this.gcd(y, x % y)
+    }
+  }
 }
+
+jutsu m = summon MathGcd()
+creation(m.run(5023427, 920311))
 ```
 
-### Power Level Check
+### Points
 
 ```aniscript
-jutsu power = 9001
 
-geass power > 9000 {
-  creation("It's over 9000!!!")
-} counter {
-  creation("Power level is within limits.")
+world Point {
+  awaken(x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  show() {
+    creation("Point " + this.x + ", " + this.y)
+  }
 }
+
+jutsu p0 = summon Point(1, 2)
+jutsu p1 = summon Point(3, 5)
+jutsu p2 = summon Point(-3, 8)
+
+p0.show()
+p1.show()
+p2.show()
+
 ```
 
 ---
@@ -154,15 +178,6 @@ geass power > 9000 {
 ```bash
 npm test
 ```
-
-With a coverage report (c8):
-
-```bash
-npm run coverage
-```
-
-Do not run `npm test coverage` — npm will pass the word `coverage` as an extra test entry point and Node will try to load a file called `coverage`, which fails. Use `npm run coverage` instead.
-
 ---
 
 ## Project Structure
