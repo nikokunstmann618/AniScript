@@ -1,6 +1,6 @@
 // Three 2D points, each a summoned move
 
-move Point {
+world Point {
   awaken(x, y) {
     this.x = x
     this.y = y

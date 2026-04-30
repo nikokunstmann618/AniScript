@@ -11,7 +11,7 @@ geass maybeX == 0 {
 creation("y = " + y)
 
 // A simple "box" (like some S(1) / z?.x) — one field, manual unwrap
-move Box {
+world Box {
   awaken(v) { this.x = v }
   val() { kaeru this.x }
 }

@@ -1,6 +1,6 @@
 // Euclidean GCD via a recursive method
 
-move MathGcd {
+world MathGcd {
   awaken() {}
 
   run(x, y) { kaeru this.gcd(x, y) }

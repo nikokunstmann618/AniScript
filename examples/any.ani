@@ -1,6 +1,6 @@
 // One method passes different value kinds through
 
-move Identity {
+world Identity {
   awaken() {}
   of(x) { kaeru x }
 }

@@ -1,6 +1,6 @@
 // Chained helpers on a move: g(f(3)) → 12
 
-move PairFns {
+world PairFns {
   awaken() {}
 
   f(a) { kaeru a + 3 }

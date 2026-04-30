@@ -1,16 +1,7 @@
 // ============================================================
 // World Building — Full OOP Hierarchy Demo
-// AnimeScript v0.2.0
+// AnimeScript v0.2.0 
 // ============================================================
-// Hierarchy:
-//   world  Narutoverse          (top tier — the game world)
-//   character  Shinobi          (middle tier — extends world)
-//   character  Hokage from Shinobi  (override train())
-//   move  Rasengan              (leaf tier — attack move)
-//   move  Heal                  (leaf tier — healing move)
-// ============================================================
-
-// ── Tier 1: World ─────────────────────────────────────────
 
 world Narutoverse {
   awaken(name) {
@@ -27,11 +18,10 @@ world Narutoverse {
   }
 }
 
-// ── Tier 2: Characters ────────────────────────────────────
-
-character Shinobi from Narutoverse {
+world Shinobi from Narutoverse {
   awaken(name, rank) {
-    channel(name)         // calls Narutoverse awaken → sets this.name, this.population
+    this.name = name
+    this.population = 0
     this.rank = rank
     this.hp = 100
     this.chakra = 80
@@ -51,15 +41,18 @@ character Shinobi from Narutoverse {
   }
 }
 
-// Hokage overrides train() — they train twice as hard
-character Hokage from Shinobi {
+world Hokage from Shinobi {
   awaken(name) {
-    channel(name, "Kage")
+    this.name = name
+    this.population = 0
+    this.rank = "Kage"
+    this.hp = 100
+    this.chakra = 80
     this.title = "Hokage"
   }
 
   train() {
-    this.chakra = this.chakra + 30   // double the gain
+    this.chakra = this.chakra + 30
     creation(this.name + " (Hokage) trains with full power! Chakra: " + this.chakra)
   }
 
@@ -68,9 +61,8 @@ character Hokage from Shinobi {
   }
 }
 
-// ── Tier 3: Moves ─────────────────────────────────────────
-
-move Rasengan {
+// Moves also need constructors, so they become world
+world Rasengan {
   awaken(power) {
     this.power = power
     this.name = "Rasengan"
@@ -88,7 +80,7 @@ move Rasengan {
   }
 }
 
-move Heal {
+world Heal {
   awaken(amount) {
     this.amount = amount
     this.name = "Mystical Palm"
@@ -137,15 +129,12 @@ jutsu healPalm = summon Heal(30)
 
 rasengan.describe()
 
-// Naruto attacks Sasuke
 rasengan.unleash(naruto, sasuke)
 sasuke.info()
 
-// Sakura heals Sasuke
 healPalm.unleash(sakura, sasuke)
 sasuke.info()
 
-// Check if Sasuke is still standing
 geass sasuke.isAlive() {
   creation("Sasuke is still in the fight!")
 } counter {
