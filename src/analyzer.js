@@ -308,8 +308,8 @@ export default function analyze(match) {
     },
 
     str(_) {
-      const full = this.sourceString;            // e.g., "\"Hello\\nworld\""
-      const content = full.slice(1, -1);         // remove quotes
+      const full = this.sourceString;           
+      const content = full.slice(1, -1);        
       const startPos = this.source.getLineAndColumnMessage();
       let result = "";
       for (let i = 0; i < content.length; i++) {
@@ -325,7 +325,6 @@ export default function analyze(match) {
               i += 5; // skip \u1234
               continue;
             } else {
-              // issue a warning
               result += "\\u" + hex;
               i += 5;
               continue;
@@ -341,15 +340,6 @@ export default function analyze(match) {
       }
       return core.stringLiteral(result);
     },
-
-    // COVER BY str(_)
-    // strchar_escape(_backslash, char) {
-      
-    // },
-    
-    // strchar_normal(char) {
-      
-    // },
 
     truth(_) {
       return core.truthLiteral()
