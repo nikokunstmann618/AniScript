@@ -18,7 +18,7 @@ AniScript {
   // creation(expr)  — print a value
   CreationStmt   = creation "(" Exp ")"
 
-  // jutsu x = expr  — declare a variable ("comrade")
+  // jutsu x = expr  — declare a variable 
   JutsuStmt  = jutsu id "=" Exp
 
   // x = expr  — reassign an existing variable
@@ -27,7 +27,7 @@ AniScript {
   // geass cond { body } counter { body }  — if / else
   GeassStmt  = geass Exp "{" Statement* "}" CounterClause?
 
-  // tsukuyomi cond { body }  — while loop ("battle")
+  // tsukuyomi cond { body }  — while loop 
   TsukuyomiStmt = tsukuyomi Exp "{" Statement* "}"
 
   // counter { body }  — else clause
@@ -44,7 +44,7 @@ AniScript {
 
   // Methods are the only class members for now
   ClassMember   = MethodDef
-  AwakenDef = awaken "(" Params ")" "{" (ThisFieldSetStmt | ChannelStmt)* "}"
+  AwakenDef     = awaken "(" Params ")" "{" (ThisFieldSetStmt | ChannelStmt)* "}"
   MethodDef     = id "(" Params ")" "{" Statement* "}"
   Params        = ListOf<id, ",">
   Args          = ListOf<Exp, ",">
