@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import optimize from "../src/optimizer.js";
 import * as core from "../src/core.js";
 
-// Helper factories to make test cases shorter
 const x = core.identifier("x");
 const y = core.identifier("y");
 const obj = core.identifier("obj");
@@ -34,19 +33,16 @@ const illusion = () => core.illusionLiteral();
 const str = (s) => core.stringLiteral(s);
 const program = (stmts) => core.program(stmts);
 
-// Helper for constant folding tests
 const fold = (op, l, r, expected) => [binary(op, num(l), num(r)), num(expected)];
 const cmp = (op, l, r, expected) => [binary(op, num(l), num(r)), expected ? truth() : illusion()];
 
 const tests = [
-  // Constant folding
   ["folds +", ...fold("+", 5, 8, 13)],
   ["folds -", ...fold("-", 5n, 8n, -3n)],
   ["folds *", ...fold("*", 5, 8, 40)],
   ["folds /", ...fold("/", 5, 8, 0.625)],
   ["folds %", ...fold("%", 10, 3, 1)],
   ["folds **", ...fold("**", 5, 8, 390625)],
-  // both ternary branches for each comparison operator
   ["folds < true",  ...cmp("<",  5, 8, true)],
   ["folds < false", ...cmp("<",  8, 5, false)],
   ["folds <= true",  ...cmp("<=", 5, 8, true)],
@@ -74,7 +70,6 @@ const tests = [
   ["optimizes 1**", binary("**", num(1), x), num(1)],
   ["optimizes **0", binary("**", x, num(0)), num(1)],
 
-  // Unary negation folding
   ["folds negation", unary("-", num(8)), num(-8)],
   [
     "keeps unary - on non-literal operand",

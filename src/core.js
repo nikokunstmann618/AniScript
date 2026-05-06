@@ -1,11 +1,9 @@
-// core.js – AST node factories for Aniscript
-
-// ── Program ──────────────────────────────────────────────────────────────
+// Program
 export function program(statements) {
     return { kind: "Program", statements };
   }
   
-  // ── Statements ───────────────────────────────────────────────────────────
+  // Statements
   export function creationStatement(expression) {
     return { kind: "CreationStatement", expression };
   }
@@ -30,7 +28,7 @@ export function program(statements) {
     return { kind: "TsukuyomiStatement", test, body };
   }
   
-  // ── Class declarations ──────────────────────────────────────────────────
+  // Class declarations
   export function worldDeclaration(name, parentName, methods) {
     return { kind: "WorldDeclaration", name, parentName, methods };
   }
@@ -47,7 +45,7 @@ export function program(statements) {
     return { kind: "MethodDefinition", name, paramNames, body };
   }
   
-  // ── OOP statements ──────────────────────────────────────────────────────
+  // OOP statements
   export function thisFieldSetStatement(field, value) {
     return { kind: "ThisFieldSetStatement", field, value };
   }
@@ -68,7 +66,7 @@ export function program(statements) {
     return { kind: "ReturnStatement", value };
   }
   
-  // ── Expressions ─────────────────────────────────────────────────────────
+  // Expressions
   export function binaryExpression(op, left, right) {
     return { kind: "BinaryExpression", op, left, right };
   }
@@ -101,7 +99,7 @@ export function program(statements) {
     return { kind: "SummonExpression", className, args };
   }
   
-  // ── Literals ────────────────────────────────────────────────────────────
+  // Literals
   export function numericLiteral(value) {
     return { kind: "NumericLiteral", value };
   }
@@ -118,7 +116,6 @@ export function program(statements) {
     return { kind: "IllusionLiteral", value: false };
   }
   
-  // ── Types (for completeness, though Aniscript is dynamically typed) ─────
   export const truthType = "truth";
   export const illusionType = "illusion";
   export const numberType = "number";
@@ -126,5 +123,4 @@ export function program(statements) {
   export const instanceType = "instance";
   export const anyType = "any";
   
-  // ── Standard library (empty, but kept for consistency) ──────────────────
   export const standardLibrary = Object.freeze({});

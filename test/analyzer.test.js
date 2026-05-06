@@ -1,11 +1,9 @@
-// test/analyzer.test.js
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import parse from "../src/parser.js";
 import analyze from "../src/analyzer.js";
 import * as core from "../src/core.js";
 
-// ──────────────────────────── Valid programs (semantically correct) ────────────────────────────
 const semanticChecks = [
   ["variable declaration", `jutsu x = 42`],
   ["print (creation)", `creation(3.14)`],
@@ -62,7 +60,6 @@ const semanticChecks = [
   ],
 ];
 
-// ──────────────────────────── Syntactically correct but semantic errors ────────────────────────────
 const semanticErrors = [
   ["redeclare variable", `jutsu x = 1 jutsu x = 2`, /already declared/],
   ["use undeclared variable", `creation(y)`, /undeclared variable/],
@@ -85,7 +82,6 @@ const semanticErrors = [
 
 ];
 
-// ──────────────────────────── AST output test for a trivial program ────────────────────────────
 describe("The analyzer", () => {
   for (const [scenario, source] of semanticChecks) {
     it(`recognizes ${scenario}`, () => {

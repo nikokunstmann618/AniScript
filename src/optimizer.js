@@ -1,12 +1,9 @@
-// optimizer.js – Machine-independent optimizations for Aniscript AST
-
 import * as core from "./core.js"
 
 export default function optimize(node) {
   return optimizers?.[node.kind]?.(node) ?? node
 }
 
-// Helper to check if a node is a literal number or boolean
 const isLiteralNumber = (n) => n?.kind === "NumericLiteral"
 const getLiteralValue = (n) => {
   if (n?.kind === "NumericLiteral") return n.value
@@ -22,7 +19,7 @@ const optimizers = {
     return p
   },
 
-  // --- Statements -------------------------------------------------
+  // Statements
   CreationStatement(s) {
     s.expression = optimize(s.expression)
     return s
@@ -60,13 +57,13 @@ const optimizers = {
   TsukuyomiStatement(s) {
     s.test = optimize(s.test)
     if (getLiteralValue(s.test) === false) {
-      return [] // while false is never entered
+      return [] 
     }
     s.body = s.body.flatMap(optimize)
     return s
   },
 
-  // --- Class declarations -----------------------------------------
+  // Class declarations
   WorldDeclaration(d) {
     d.methods = d.methods.map(optimize)
     return d
@@ -84,7 +81,7 @@ const optimizers = {
     return m
   },
 
-  // --- OOP statements ---------------------------------------------
+  // OOP statements
   ThisFieldSetStatement(s) {
     s.value = optimize(s.value)
     return s
@@ -108,7 +105,7 @@ const optimizers = {
     return s
   },
 
-  // --- Expressions ------------------------------------------------
+  // Expressions
   BinaryExpression(e) {
     e.left = optimize(e.left)
     e.right = optimize(e.right)
@@ -116,7 +113,6 @@ const optimizers = {
     const leftVal = getLiteralValue(e.left)
     const rightVal = getLiteralValue(e.right)
 
-    // Constant folding for numbers and booleans
     if (leftVal !== undefined && rightVal !== undefined) {
       switch (e.op) {
         case "+": return core.numericLiteral(leftVal + rightVal)
@@ -134,7 +130,6 @@ const optimizers = {
       }
     }
 
-    // Strength reductions
     if (isLiteralNumber(e.left)) {
       const lv = e.left.value
       if (lv === 0) {
@@ -154,7 +149,6 @@ const optimizers = {
       if (rv === 0 && e.op === "**") return core.numericLiteral(1)
     }
 
-    // Boolean shortcuts (short-circuit style simplification)
     if (e.op === "&&") {
       if (leftVal === false) return e.left
       if (leftVal === true) return e.right
@@ -206,7 +200,6 @@ const optimizers = {
     return s
   },
 
-  // --- Literals (no further optimization) ------------------------
   NumericLiteral(n) { return n },
   StringLiteral(s) { return s },
   TruthLiteral(t) { return t },

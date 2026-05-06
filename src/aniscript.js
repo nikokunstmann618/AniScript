@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-// aniscript.js – CLI entry point for the AniScript compiler.
-
 import * as fs from "node:fs"
 import compile from "./compiler.js"
 
@@ -49,8 +46,6 @@ try {
   if (outputType === "parsed") {
     console.log(output)
   } else if (outputType === "js") {
-    // Execute the generated JavaScript directly
-    // eslint-disable-next-line no-eval
     eval(output)
   } else {
     console.log(JSON.stringify(output, null, 2))

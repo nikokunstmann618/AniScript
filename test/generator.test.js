@@ -1,11 +1,8 @@
-// test/generator.test.js – unit tests for the AniScript code generator.
-
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 import generate from "../src/generator.js"
 import * as core from "../src/core.js"
 
-// ── Shorthand factories ───────────────────────────────────────────────────
 
 const num = n => core.numericLiteral(n)
 const str = s => core.stringLiteral(s)
@@ -20,7 +17,7 @@ const assign = (target, source) => core.assignStatement(target, source)
 const ret = val => core.returnStatement(val)
 
 describe("The generator", () => {
-  // ── Literals ────────────────────────────────────────────────────────────
+  // Literals
 
   it("generates a numeric integer", () => {
     assert.equal(generate(num(42)), "42")
@@ -54,7 +51,7 @@ describe("The generator", () => {
     assert.equal(generate(core.thisExpression()), "this")
   })
 
-  // ── Expressions ─────────────────────────────────────────────────────────
+  // Expressions 
 
   it("generates a binary expression", () => {
     assert.equal(generate(binary("+", num(2), num(3))), "(2 + 3)")
@@ -104,7 +101,7 @@ describe("The generator", () => {
     assert.equal(generate(node), 'new Hero("Naruto", 9)')
   })
 
-  // ── Simple statements ────────────────────────────────────────────────────
+  // Simple statements
 
   it("generates a creation statement", () => {
     assert.equal(generate(creation(num(1))), "console.log(1)")
@@ -171,7 +168,7 @@ describe("The generator", () => {
   assert.equal(generate(node), 'super.awaken(1, "hi")')
 })
 
-  // ── Control flow ─────────────────────────────────────────────────────────
+  // Control flow 
 
   it("generates a geass with no alternate", () => {
     const node = core.geassStatement(truth(), [creation(num(1))], null)
@@ -226,7 +223,7 @@ describe("The generator", () => {
     assert.ok(js.includes("while (true)"))
   })
 
-  // ── Class declarations ───────────────────────────────────────────────────
+  // Class declarations
 
   it("generates a world class with no parent", () => {
     const method = core.methodDefinition("awaken", [], [])
@@ -284,7 +281,7 @@ describe("The generator", () => {
     assert.ok(js.includes("reset()"))
   })
 
-  // ── Program ──────────────────────────────────────────────────────────────
+  // Program
 
   it("generates a full program", () => {
     const node = core.program([
@@ -302,13 +299,12 @@ describe("The generator", () => {
     assert.equal(generate(core.program([])), "")
   })
 
-  // ── Indentation ──────────────────────────────────────────────────────────
+  // Indentation 
 
   it("indents method bodies inside a class", () => {
     const method = core.methodDefinition("greet", [], [creation(str("hi"))])
     const node = core.worldDeclaration("Greeter", null, [method])
     const js = generate(node)
-    // The method body line should be indented twice (class body + method body)
     assert.ok(js.includes('    console.log("hi")'))
   })
 

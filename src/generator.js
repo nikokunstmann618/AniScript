@@ -1,5 +1,3 @@
-// generator.js – Walks the AniScript AST and emits JavaScript source code.
-
 export default function generate(node) {
   return generators[node.kind](node)
 }
@@ -18,7 +16,6 @@ function generateClass(d) {
   if (awakenMethod) {
     const params = awakenMethod.paramNames.join(", ");
     if (d.parentName) {
-      // Call super first, then this.awaken
       constructorCode = `constructor(${params}) {\n  super(${params});\n  this.awaken(${params});\n}\n\n`;
     } else {
       constructorCode = `constructor(${params}) {\n  this.awaken(${params});\n}\n\n`;
@@ -26,7 +23,6 @@ function generateClass(d) {
   } else if (d.parentName) {
     constructorCode = `constructor(...args) {\n  super(...args);\n}\n\n`;
   }
-  // Keep all methods, including awaken
   const methods = d.methods.map(generate).join("\n\n");
   return `class ${d.name}${ext} {\n${indent(constructorCode + methods)}\n}`;
 }

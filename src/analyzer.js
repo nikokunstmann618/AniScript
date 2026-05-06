@@ -1,6 +1,3 @@
-// analyzer.js – walks the Ohm parse tree, enforces static rules,
-// and returns a core.js AST.
-
 import * as core from "./core.js"
 
 function error(message) {
@@ -10,8 +7,6 @@ function error(message) {
 export default function analyze(match) {
   const grammar = match.matcher.grammar
 
-  // ── Scope tracking ────────────────────────────────────────────────────────
-  // Each scope is a Set of declared variable names.
   let scopeStack = [new Set()]
 
   function pushScope() {
@@ -38,16 +33,15 @@ export default function analyze(match) {
     )
   }
 
-  // ── Class & method context ────────────────────────────────────────────────
-  const declaredClasses = new Map() // className → { parentName }
+  
+  const declaredClasses = new Map()
   let inMethod = false
   let currentClassName = null
   let currentParentName = null
 
-  // ── String escape table ───────────────────────────────────────────────────
   const ESCAPES = { n: "\n", t: "\t", r: "\r", "\\": "\\", '"': '"' }
 
-  // ── Shared class-declaration logic ────────────────────────────────────────
+  // Shared class-declaration logic
   function analyzeClass(nameId, parentIds, members, factory) {
     const name = nameId.sourceString
     const parentName =
@@ -77,20 +71,19 @@ export default function analyze(match) {
     return factory(name, parentName, methods)
   }
 
-  // ── Semantics actions ─────────────────────────────────────────────────────
+  // Semantics actions
   const actions = {
     Program(statements) {
       return core.program(statements.children.map(s => s.analyze()))
     },
 
-    // ── Statements ────────────────────────────────────────────────────────
+    // Statements 
 
     CreationStmt(_kw, _lp, exp, _rp) {
       return core.creationStatement(exp.analyze())
     },
 
     JutsuStmt(_kw, id, _eq, exp) {
-      // Evaluate initializer before declaring so `jutsu x = x` is caught.
       const initializer = exp.analyze()
       declare(id.sourceString)
       return core.jutsuStatement(id.sourceString, initializer)
@@ -126,7 +119,7 @@ export default function analyze(match) {
       return core.tsukuyomiStatement(test, body)
     },
 
-    // ── Class declarations ────────────────────────────────────────────────
+    // Class declarations
 
     AwakenDef(_kw, _lp, params, _rp, _lbrace, fieldSetStmts, _rbrace) {
       const paramNames = params.asIteration().children.map(p => p.sourceString);
@@ -145,28 +138,23 @@ export default function analyze(match) {
       const name = nameId.sourceString;
       const parentName = parentIds.children.length > 0 ? parentIds.children[0].sourceString : null;
     
-      // Check parent existence and duplicate declaration
       if (parentName && !declaredClasses.has(parentName)) {
         error(`Class '${name}' tries to extend '${parentName}', but that class doesn't exist yet`);
       }
       
     
-      // Register the class BEFORE analyzing its body
       declaredClasses.set(name, { parentName });
     
-      // Set context for analysis of the body
       const outerClass = currentClassName;
       const outerParent = currentParentName;
       currentClassName = name;
       currentParentName = parentName;
     
-      // Analyze awaken and methods
       const awaken = awakenDef.analyze();
       const methodNodes = methodMembers.children.map(m => m.analyze());
       const awakenMethod = core.methodDefinition("awaken", awaken.paramNames, awaken.body);
       const allMethods = [awakenMethod, ...methodNodes];
     
-      // Restore context
       currentClassName = outerClass;
       currentParentName = outerParent;
     
@@ -196,7 +184,7 @@ export default function analyze(match) {
       return core.methodDefinition(nameId.sourceString, paramNames, body)
     },
 
-    // ── OOP statements ────────────────────────────────────────────────────
+    // OOP statements
 
     ThisFieldSetStmt(_this, _dot, fieldId, _eq, exp) {
       if (!inMethod) error("'this' can only be used inside a method")
@@ -238,7 +226,7 @@ export default function analyze(match) {
       return core.returnStatement(exp.analyze())
     },
 
-    // ── Expressions ───────────────────────────────────────────────────────
+    // Expressions 
 
     Exp_binary(left, op, right) {
       return core.binaryExpression(op.sourceString, left.analyze(), right.analyze())
@@ -297,7 +285,7 @@ export default function analyze(match) {
       return exp.analyze()
     },
 
-    // ── Literals ──────────────────────────────────────────────────────────
+    // Literals
 
     num_float(_int, _dot, _frac) {
       return core.numericLiteral(Number(this.sourceString))
@@ -316,13 +304,11 @@ export default function analyze(match) {
         const ch = content[i];
         if (ch === "\\" && i + 1 < content.length) {
           const next = content[i + 1];
-          // 1. Complex escapes (e.g., \u1234)
           if (next === "u") {
-            // parse Unicode escape (requires 4 hex digits)
             const hex = content.slice(i + 2, i + 6);
             if (/^[0-9a-fA-F]{4}$/.test(hex)) {
               result += String.fromCodePoint(parseInt(hex, 16));
-              i += 5; // skip \u1234
+              i += 5;
               continue;
             } else {
               result += "\\u" + hex;
@@ -330,7 +316,6 @@ export default function analyze(match) {
               continue;
             }
           }
-          // 2. Standard escapes
           const escapes = { n: "\n", t: "\t", r: "\r", "\\": "\\", '"': '"' };
           result += escapes[next] ?? next;
           i++;

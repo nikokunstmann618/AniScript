@@ -1,5 +1,3 @@
-// test/compiler.test.js – end-to-end pipeline tests via compile().
-
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 import compile from "../src/compiler.js"
